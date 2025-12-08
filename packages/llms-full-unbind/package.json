@@ -1,0 +1,45 @@
+{
+  "name": "llms-full-unbind",
+  "version": "0.0.0",
+  "description": "Unbind llms-full.txt into individual pages.",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "test": "node --experimental-strip-types --test tests/src/**/*.ts",
+    "cover": "c8 --reporter=lcov --reporter=text pnpm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ota-meshi/llms-full-unbind.git",
+    "directory": "packages/llms-full-unbind"
+  },
+  "author": "Yosuke Ota",
+  "funding": "https://github.com/sponsors/ota-meshi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ota-meshi/llms-full-unbind/issues"
+  },
+  "homepage": "https://github.com/ota-meshi/llms-full-unbind#readme",
+  "keywords": [
+    "llms-full.txt",
+    "llms-full"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
