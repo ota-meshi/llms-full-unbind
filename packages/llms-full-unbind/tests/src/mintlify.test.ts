@@ -8,7 +8,6 @@
 import assert from "node:assert";
 import { describe, it } from "node:test";
 import { unbind, unbindStream, type Page } from "../../src/index.ts";
-import { parseMintlifyFormat } from "../../src/mintlify.ts";
 
 /**
  * Helper function to create a ReadableStream from a string
@@ -54,7 +53,7 @@ Get started building your own server to use in Claude for Desktop.
 
 We'll build a server that exposes two tools.`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 2);
     assert.strictEqual(pages[0].title, "Build an MCP client");
@@ -83,7 +82,7 @@ The Model Context Protocol (MCP) is an open standard.
 
 MCP enables AI applications.`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 1);
     assert.strictEqual(
@@ -93,24 +92,6 @@ MCP enables AI applications.`;
     assert.deepStrictEqual(pages[0].metadata, {
       source: "https://modelcontextprotocol.io/docs/concepts/what-is-mcp",
     });
-  });
-
-  it("should handle content without Source line (direct parser)", () => {
-    // When Source line is missing, format detection won't detect it as markdown-source
-    // So we test the parser directly
-    const content = `# Simple Page
-
-Just some content without a Source line.
-
-## Section
-
-More content here.`;
-
-    const pages = parseMintlifyFormat(content);
-
-    assert.strictEqual(pages.length, 1);
-    assert.strictEqual(pages[0].title, "Simple Page");
-    assert.strictEqual(pages[0].metadata, undefined);
   });
 
   it("should handle multiple pages with various content", () => {
@@ -139,7 +120,7 @@ Learn about MCP servers.
 
 A server provides capabilities.`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 3);
     assert.strictEqual(pages[0].title, "Architecture overview");
@@ -148,12 +129,12 @@ A server provides capabilities.`;
   });
 
   it("should handle empty content gracefully", () => {
-    const pages = unbind("");
+    const pages = Array.from(unbind(""));
     assert.strictEqual(pages.length, 0);
   });
 
   it("should handle content with only whitespace", () => {
-    const pages = unbind("   \n\n   \n");
+    const pages = Array.from(unbind("   \n\n   \n"));
     assert.strictEqual(pages.length, 0);
   });
 });
@@ -258,7 +239,7 @@ Source: https://example.com/page
 
 Content here.`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 1);
     assert.strictEqual(pages[0].title, "Page Title");
@@ -277,7 +258,7 @@ Content
 ---
 More content after separator`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     // Should be treated as markdown-source format (one page with --- in content)
     assert.strictEqual(pages.length, 1);

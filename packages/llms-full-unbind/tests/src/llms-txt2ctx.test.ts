@@ -54,7 +54,7 @@ async function* stringToAsyncIterable(
 describe("unbind (llms_txt2ctx format)", () => {
   it("should parse a single doc tag", () => {
     const content = `<doc title="Test Title" desc="Test Description">Test Content</doc>`;
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 1);
     assert.strictEqual(pages[0].title, "Test Title");
@@ -70,23 +70,23 @@ describe("unbind (llms_txt2ctx format)", () => {
 <doc title="Second" desc="Second desc">Second content</doc>
 <doc title="Third">Third content without desc</doc>
 `;
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 3);
     assert.strictEqual(pages[0].title, "First");
     assert.strictEqual(pages[1].title, "Second");
     assert.strictEqual(pages[2].title, "Third");
-    assert.strictEqual(pages[2].metadata, undefined);
+    assert.deepStrictEqual(pages[2].metadata, {});
   });
 
   it("should handle empty content", () => {
-    const pages = unbind("");
+    const pages = Array.from(unbind(""));
     assert.strictEqual(pages.length, 0);
   });
 
   it("should handle content without doc tags", () => {
     const content = "This is just plain text without any doc tags.";
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
     assert.strictEqual(pages.length, 0);
   });
 
@@ -96,7 +96,7 @@ describe("unbind (llms_txt2ctx format)", () => {
     Content with whitespace
     
 </doc>`;
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 1);
     assert.strictEqual(pages[0].content, "Content with whitespace");
@@ -104,12 +104,12 @@ describe("unbind (llms_txt2ctx format)", () => {
 
   it("should parse doc tags with only title attribute", () => {
     const content = `<doc title="Only Title">Content here</doc>`;
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 1);
     assert.strictEqual(pages[0].title, "Only Title");
     assert.strictEqual(pages[0].content, "Content here");
-    assert.strictEqual(pages[0].metadata, undefined);
+    assert.deepStrictEqual(pages[0].metadata, {});
   });
 
   it("should handle multiline content", () => {
@@ -124,7 +124,7 @@ const x = 1;
 
 More text.
 </doc>`;
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 1);
     assert.ok(pages[0].content.includes("# Header"));
@@ -133,7 +133,7 @@ More text.
 
   it("should handle special characters in content", () => {
     const content = `<doc title="Special Chars" desc="Contains &lt; and &gt;">Content with <code> tags and special chars: &amp;</doc>`;
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 1);
     assert.ok(pages[0].content.includes("<code>"));
@@ -237,7 +237,7 @@ Some text in between
 <doc title="Title 2" desc="Desc 2">Content 2</doc>
 `;
 
-    const syncPages = unbind(content);
+    const syncPages = Array.from(unbind(content));
     const streamPages: Page[] = [];
 
     for await (const page of unbindStream(stringToStream(content))) {
@@ -255,8 +255,7 @@ Some text in between
 
 describe("Real-world llms_txt2ctx format", () => {
   it("should parse llms-full.txt style content", () => {
-    const content = `<docs>
-<doc title="FastHTML concise guide" desc="A brief overview of idiomatic FastHTML apps"># Concise reference
+    const content = `<doc title="FastHTML concise guide" desc="A brief overview of idiomatic FastHTML apps"># Concise reference
 
 ## About FastHTML
 
@@ -264,10 +263,9 @@ FastHTML is a library for building web applications.</doc>
 <doc title="HTMX reference" desc="Brief description of HTMX">## Contents
 
 * htmx Core Attributes
-* htmx CSS Classes</doc>
-</docs>`;
+* htmx CSS Classes</doc>`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 2);
     assert.strictEqual(pages[0].title, "FastHTML concise guide");
@@ -285,7 +283,7 @@ FastHTML is a library for building web applications.</doc>
 \`\`\`
 </doc>`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 1);
     assert.ok(pages[0].content.includes('<div class="container">'));

@@ -5,7 +5,7 @@ import { unbind, unbindStream, type Page } from "../../src/index.ts";
 describe("unbind", () => {
   it("should parse a single doc tag", () => {
     const content = `<doc title="Test Title" desc="Test Description">Test Content</doc>`;
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 1);
     assert.strictEqual(pages[0].title, "Test Title");
@@ -21,23 +21,23 @@ describe("unbind", () => {
 <doc title="Second" desc="Second desc">Second content</doc>
 <doc title="Third">Third content without desc</doc>
 `;
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 3);
     assert.strictEqual(pages[0].title, "First");
     assert.strictEqual(pages[1].title, "Second");
     assert.strictEqual(pages[2].title, "Third");
-    assert.strictEqual(pages[2].metadata, undefined);
+    assert.deepStrictEqual(pages[2].metadata, {});
   });
 
   it("should handle empty content", () => {
-    const pages = unbind("");
+    const pages = Array.from(unbind(""));
     assert.strictEqual(pages.length, 0);
   });
 
   it("should handle content without doc tags", () => {
     const content = "This is just plain text without any doc tags.";
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
     assert.strictEqual(pages.length, 0);
   });
 
@@ -47,7 +47,7 @@ describe("unbind", () => {
     Content with whitespace
     
 </doc>`;
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 1);
     assert.strictEqual(pages[0].content, "Content with whitespace");
@@ -55,12 +55,12 @@ describe("unbind", () => {
 
   it("should parse doc tags with only title attribute", () => {
     const content = `<doc title="Only Title">Content here</doc>`;
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 1);
     assert.strictEqual(pages[0].title, "Only Title");
     assert.strictEqual(pages[0].content, "Content here");
-    assert.strictEqual(pages[0].metadata, undefined);
+    assert.deepStrictEqual(pages[0].metadata, {});
   });
 
   it("should handle multiline content", () => {
@@ -75,7 +75,7 @@ const x = 1;
 
 More text.
 </doc>`;
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 1);
     assert.ok(pages[0].content.includes("# Header"));
@@ -84,7 +84,7 @@ More text.
 
   it("should handle special characters in content", () => {
     const content = `<doc title="Special Chars" desc="Contains &lt; and &gt;">Content with <code> tags and special chars: &amp;</doc>`;
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 1);
     assert.ok(pages[0].content.includes("<code>"));
@@ -230,7 +230,7 @@ Some text in between
 <doc title="Title 2" desc="Desc 2">Content 2</doc>
 `;
 
-    const syncPages = unbind(content);
+    const syncPages = Array.from(unbind(content));
     const streamPages: Page[] = [];
 
     for await (const page of unbindStream(stringToStream(content))) {
@@ -248,8 +248,7 @@ Some text in between
 
 describe("Real-world format", () => {
   it("should parse llms-full.txt style content", () => {
-    const content = `<docs>
-<doc title="FastHTML concise guide" desc="A brief overview of idiomatic FastHTML apps"># Concise reference
+    const content = `<doc title="FastHTML concise guide" desc="A brief overview of idiomatic FastHTML apps"># Concise reference
 
 ## About FastHTML
 
@@ -257,10 +256,9 @@ FastHTML is a library for building web applications.</doc>
 <doc title="HTMX reference" desc="Brief description of HTMX">## Contents
 
 * htmx Core Attributes
-* htmx CSS Classes</doc>
-</docs>`;
+* htmx CSS Classes</doc>`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 2);
     assert.strictEqual(pages[0].title, "FastHTML concise guide");
@@ -278,7 +276,7 @@ FastHTML is a library for building web applications.</doc>
 \`\`\`
 </doc>`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 1);
     assert.ok(pages[0].content.includes('<div class="container">'));
@@ -287,7 +285,11 @@ FastHTML is a library for building web applications.</doc>
 
 describe("VueJS llms-full.txt format", () => {
   it("should parse markdown-separator format", () => {
-    const content = `# Introduction {#introduction}
+    const content = `---
+url: /introduction
+---
+
+# Introduction {#introduction}
 
 Vue.js is a progressive JavaScript framework.
 
@@ -295,6 +297,8 @@ Vue.js is a progressive JavaScript framework.
 
 Start building with Vue.
 
+---
+url: /components
 ---
 
 # Components Basics {#components-basics}
@@ -306,12 +310,14 @@ Components are reusable Vue instances.
 Here's how to define a component.
 
 ---
+url: /reactivity
+---
 
 # Reactivity
 
 Vue's reactivity system.`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 3);
     assert.strictEqual(pages[0].title, "Introduction");
@@ -322,57 +328,75 @@ Vue's reactivity system.`;
   });
 
   it("should extract URL metadata from content", () => {
-    const content = `# Template Syntax
+    const content = `---
+url: /guide/essentials/template-syntax.md
+---
+
+# Template Syntax
 
 Some content here.
 
-url: /guide/essentials/template-syntax.md
-
+---
+url: /guide/essentials/computed-properties
 ---
 
 # Computed Properties
 
 More content.`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 2);
     assert.strictEqual(pages[0].title, "Template Syntax");
     assert.deepStrictEqual(pages[0].metadata, {
       url: "/guide/essentials/template-syntax.md",
     });
-    assert.strictEqual(pages[1].metadata, undefined);
+    assert.deepStrictEqual(pages[1].metadata, {
+      url: "/guide/essentials/computed-properties",
+    });
   });
 
   it("should handle content without H1 headers", () => {
-    const content = `Some content without header
+    const content = `---
+url: /first
+---
 
+Some content without header
+
+---
+url: /second
 ---
 
 ## Only H2 Header
 
 Content with only H2.`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 2);
-    assert.strictEqual(pages[0].title, "");
-    assert.strictEqual(pages[1].title, "");
+    assert.strictEqual(pages[0].title, null);
+    assert.strictEqual(pages[1].title, null);
     assert.ok(pages[0].content.includes("Some content without header"));
   });
 
   it("should handle H1 with anchor tags", () => {
-    const content = `# Options API {#options-api}
+    const content = `---
+url: /options
+---
+
+# Options API {#options-api}
 
 The Options API.
 
+---
+url: /composition
 ---
 
 # Composition API {#composition-api}
 
 The Composition API.`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 2);
     assert.strictEqual(pages[0].title, "Options API");
@@ -380,24 +404,33 @@ The Composition API.`;
   });
 
   it("should handle empty sections", () => {
-    const content = `# First Section
+    const content = `---
+url: /first
+---
+
+# First Section
 
 Content here.
 
 ---
+url: /empty
+---
 
+---
+url: /third
 ---
 
 # Third Section
 
 More content.`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
-    // Empty sections should be filtered out
-    assert.strictEqual(pages.length, 2);
+    // Empty sections are also returned as pages
+    assert.strictEqual(pages.length, 3);
     assert.strictEqual(pages[0].title, "First Section");
-    assert.strictEqual(pages[1].title, "Third Section");
+    assert.strictEqual(pages[1].title, null);
+    assert.strictEqual(pages[2].title, "Third Section");
   });
 });
 
@@ -428,10 +461,16 @@ describe("VueJS format streaming", () => {
   }
 
   it("should stream parse VueJS format", async () => {
-    const content = `# First Page {#first}
+    const content = `---
+url: /first
+---
+
+# First Page {#first}
 
 Content of first page.
 
+---
+url: /second
 ---
 
 # Second Page {#second}
@@ -450,10 +489,16 @@ Content of second page.`;
   });
 
   it("should produce same results as unbind for VueJS format", async () => {
-    const content = `# Title 1
+    const content = `---
+url: /first
+---
+
+# Title 1
 
 Content 1.
 
+---
+url: /second
 ---
 
 # Title 2
@@ -461,12 +506,14 @@ Content 1.
 Content 2.
 
 ---
+url: /third
+---
 
 # Title 3
 
 Content 3.`;
 
-    const syncPages = unbind(content);
+    const syncPages = Array.from(unbind(content));
     const streamPages: Page[] = [];
 
     for await (const page of unbindStream(stringToStream(content))) {
@@ -482,10 +529,16 @@ Content 3.`;
   });
 
   it("should handle small chunks for VueJS format", async () => {
-    const content = `# Small Chunks Test
+    const content = `---
+url: /first
+---
+
+# Small Chunks Test
 
 Testing small chunks.
 
+---
+url: /second
 ---
 
 # Another Section

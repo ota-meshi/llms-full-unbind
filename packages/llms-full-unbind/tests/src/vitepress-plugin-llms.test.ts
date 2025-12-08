@@ -35,7 +35,11 @@ function stringToStream(
 
 describe("unbind (vitepress-plugin-llms format)", () => {
   it("should parse markdown-separator format", () => {
-    const content = `# Introduction {#introduction}
+    const content = `---
+url: /introduction
+---
+
+# Introduction {#introduction}
 
 Vue.js is a progressive JavaScript framework.
 
@@ -43,6 +47,8 @@ Vue.js is a progressive JavaScript framework.
 
 Start building with Vue.
 
+---
+url: /components
 ---
 
 # Components Basics {#components-basics}
@@ -54,12 +60,14 @@ Components are reusable Vue instances.
 Here's how to define a component.
 
 ---
+url: /reactivity
+---
 
 # Reactivity
 
 Vue's reactivity system.`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 3);
     assert.strictEqual(pages[0].title, "Introduction");
@@ -70,57 +78,75 @@ Vue's reactivity system.`;
   });
 
   it("should extract URL metadata from content", () => {
-    const content = `# Template Syntax
+    const content = `---
+url: /guide/essentials/template-syntax.md
+---
+
+# Template Syntax
 
 Some content here.
 
-url: /guide/essentials/template-syntax.md
-
+---
+url: /guide/essentials/computed-properties
 ---
 
 # Computed Properties
 
 More content.`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 2);
     assert.strictEqual(pages[0].title, "Template Syntax");
     assert.deepStrictEqual(pages[0].metadata, {
       url: "/guide/essentials/template-syntax.md",
     });
-    assert.strictEqual(pages[1].metadata, undefined);
+    assert.deepStrictEqual(pages[1].metadata, {
+      url: "/guide/essentials/computed-properties",
+    });
   });
 
   it("should handle content without H1 headers", () => {
-    const content = `Some content without header
+    const content = `---
+url: /first
+---
 
+Some content without header
+
+---
+url: /second
 ---
 
 ## Only H2 Header
 
 Content with only H2.`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 2);
-    assert.strictEqual(pages[0].title, "");
-    assert.strictEqual(pages[1].title, "");
+    assert.strictEqual(pages[0].title, null);
+    assert.strictEqual(pages[1].title, null);
     assert.ok(pages[0].content.includes("Some content without header"));
   });
 
   it("should handle H1 with anchor tags", () => {
-    const content = `# Options API {#options-api}
+    const content = `---
+url: /options
+---
+
+# Options API {#options-api}
 
 The Options API.
 
+---
+url: /composition
 ---
 
 # Composition API {#composition-api}
 
 The Composition API.`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
     assert.strictEqual(pages.length, 2);
     assert.strictEqual(pages[0].title, "Options API");
@@ -128,33 +154,48 @@ The Composition API.`;
   });
 
   it("should handle empty sections", () => {
-    const content = `# First Section
+    const content = `---
+url: /first
+---
+
+# First Section
 
 Content here.
 
 ---
+url: /empty
+---
 
+---
+url: /third
 ---
 
 # Third Section
 
 More content.`;
 
-    const pages = unbind(content);
+    const pages = Array.from(unbind(content));
 
-    // Empty sections should be filtered out
-    assert.strictEqual(pages.length, 2);
+    // Empty sections are also returned as pages
+    assert.strictEqual(pages.length, 3);
     assert.strictEqual(pages[0].title, "First Section");
-    assert.strictEqual(pages[1].title, "Third Section");
+    assert.strictEqual(pages[1].title, null);
+    assert.strictEqual(pages[2].title, "Third Section");
   });
 });
 
 describe("unbindStream (vitepress-plugin-llms format)", () => {
   it("should stream parse VueJS format", async () => {
-    const content = `# First Page {#first}
+    const content = `---
+url: /first
+---
+
+# First Page {#first}
 
 Content of first page.
 
+---
+url: /second
 ---
 
 # Second Page {#second}
@@ -173,10 +214,16 @@ Content of second page.`;
   });
 
   it("should produce same results as unbind for VueJS format", async () => {
-    const content = `# Title 1
+    const content = `---
+url: /first
+---
+
+# Title 1
 
 Content 1.
 
+---
+url: /second
 ---
 
 # Title 2
@@ -184,12 +231,14 @@ Content 1.
 Content 2.
 
 ---
+url: /third
+---
 
 # Title 3
 
 Content 3.`;
 
-    const syncPages = unbind(content);
+    const syncPages = Array.from(unbind(content));
     const streamPages: Page[] = [];
 
     for await (const page of unbindStream(stringToStream(content))) {
@@ -205,10 +254,16 @@ Content 3.`;
   });
 
   it("should handle small chunks for VueJS format", async () => {
-    const content = `# Small Chunks Test
+    const content = `---
+url: /first
+---
+
+# Small Chunks Test
 
 Testing small chunks.
 
+---
+url: /second
 ---
 
 # Another Section

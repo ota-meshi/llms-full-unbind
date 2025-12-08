@@ -11,43 +11,130 @@
  */
 
 // Re-export types
-export type { Page, Format, StreamingParser } from "./types.ts";
+export type { Page, StreamingParser } from "./types.ts";
 
 // Import types and parsers
-import type { Page, Format } from "./types.ts";
-import {
-  parseLlmsTxt2ctxFormat,
-  LlmsTxt2ctxStreamingParser,
-} from "./llms-txt2ctx.ts";
-import {
-  parseVitepressPluginLlmsFormat,
-  VitepressPluginLlmsStreamingParser,
-} from "./vitepress-plugin-llms.ts";
-import { parseMintlifyFormat, MintlifyStreamingParser } from "./mintlify.ts";
+import type { Page, StreamingParser } from "./types.ts";
+import { stringToLines, toLines } from "./utils/to-line.ts";
+import { LlmsTxt2ctxStreamingParser } from "./parser/llms-txt2ctx.ts";
+import { VitepressPluginLlmsStreamingParser } from "./parser/vitepress-plugin-llms.ts";
+import { MintlifyStreamingParser } from "./parser/mintlify.ts";
+import { H1StreamingParser } from "./parser/h1.ts";
 
 /**
- * Detect the format of the content
+ * Parser state for tracking format detection and buffering
  */
-function detectFormat(content: string): Format {
-  // Check for doc tags first (llms_txt2ctx format)
-  if (/<doc\s+title="/.test(content)) {
-    return "llms-txt2ctx";
+type ParserState = {
+  parser: StreamingParser | null;
+  bufferLines: string[];
+};
+
+type ParserDetector = (detectKind: "certain" | "maybe" | "no") => boolean;
+
+const intermediateDetector: ParserDetector = (detectKind) =>
+  detectKind === "certain";
+const finalDetector: ParserDetector = (detectKind) =>
+  detectKind === "certain" || detectKind === "maybe";
+
+/**
+ * Detect format and instantiate appropriate parser
+ *
+ * Tries to detect the format by checking buffer content against each parser's detection logic.
+ * Returns the first matching parser or null if no format is detected yet.
+ */
+function detectParser(
+  bufferLines: string[],
+  checkDetect: (detectKind: "certain" | "maybe" | "no") => boolean,
+): StreamingParser | null {
+  if (checkDetect(VitepressPluginLlmsStreamingParser.detect(bufferLines))) {
+    return new VitepressPluginLlmsStreamingParser();
   }
-  // Check for mintlify format (# Title followed by Source: URL)
-  // This pattern is used by Mintlify-generated llms-full.txt
-  if (/^# .+\nSource:\s/.test(content)) {
-    return "mintlify";
+  if (checkDetect(MintlifyStreamingParser.detect(bufferLines))) {
+    return new MintlifyStreamingParser();
   }
-  // Check for vitepress-plugin-llms format (markdown with --- separators)
-  if (content.includes("\n---\n") || content.startsWith("---\n")) {
-    return "vitepress-plugin-llms";
+  if (checkDetect(LlmsTxt2ctxStreamingParser.detect(bufferLines))) {
+    return new LlmsTxt2ctxStreamingParser();
   }
-  // Default to llms_txt2ctx format
-  return "llms-txt2ctx";
+  if (checkDetect(H1StreamingParser.detect(bufferLines))) {
+    return new H1StreamingParser();
+  }
+  return null;
 }
 
 /**
- * Parses the entire string synchronously and returns an array of pages.
+ * Process a single line and yield any completed pages
+ *
+ * If parser is not yet detected, buffers the line and attempts detection.
+ * Once detected, feeds buffered lines to the parser and processes subsequent lines.
+ */
+function* processLine(line: string, state: ParserState) {
+  if (state.parser == null) {
+    state.bufferLines.push(line);
+    state.parser = detectParser(state.bufferLines, intermediateDetector);
+
+    if (state.parser) {
+      // Feed buffered lines to the parser
+      for (const bufferLine of state.bufferLines) {
+        yield* state.parser.appendLine(bufferLine);
+      }
+      // eslint-disable-next-line require-atomic-updates -- OK
+      state.bufferLines.length = 0;
+    }
+  } else {
+    yield* state.parser.appendLine(line);
+  }
+}
+
+/**
+ * Finalize parser state and yield any remaining pages
+ */
+function* postprocessParserState(state: ParserState) {
+  if (state.parser == null) {
+    state.parser = detectParser(state.bufferLines, finalDetector);
+    if (state.parser) {
+      for (const bufferLine of state.bufferLines) {
+        yield* state.parser.appendLine(bufferLine);
+      }
+    }
+  }
+
+  if (state.parser?.flush) {
+    yield* state.parser.flush();
+  }
+}
+
+/**
+ * Process synchronous iterable of lines and yield pages
+ */
+function* processLines(lines: Iterable<string>) {
+  const state: ParserState = {
+    parser: null,
+    bufferLines: [],
+  };
+
+  for (const line of lines) {
+    yield* processLine(line, state);
+  }
+  yield* postprocessParserState(state);
+}
+
+/**
+ * Process asynchronous iterable of lines and yield pages
+ */
+async function* processLinesAsync(lines: AsyncIterable<string>) {
+  const state: ParserState = {
+    parser: null,
+    bufferLines: [],
+  };
+
+  for await (const line of lines) {
+    yield* processLine(line, state);
+  }
+  yield* postprocessParserState(state);
+}
+
+/**
+ * Parses the entire string synchronously and returns an iterable of pages.
  *
  * Automatically detects the format of the content:
  * - llms_txt2ctx format: `<doc title="..." desc="...">content</doc>` (generated by llms_txt2ctx CLI)
@@ -55,7 +142,7 @@ function detectFormat(content: string): Format {
  * - mintlify format: Markdown pages with `# Title` followed by `Source: URL` (generated by Mintlify)
  *
  * @param content - The full content of llms-full.txt
- * @returns An array of Page objects
+ * @returns An iterable of Page objects
  *
  * @example
  * ```typescript
@@ -63,23 +150,13 @@ function detectFormat(content: string): Format {
  *
  * const response = await fetch("https://example.com/llms-full.txt");
  * const text = await response.text();
- * const pages = unbind(text);
+ * const pages = Array.from(unbind(text));
  *
  * console.log(`Extracted ${pages.length} pages.`);
  * ```
  */
-export function unbind(content: string): Page[] {
-  const format = detectFormat(content);
-
-  if (format === "vitepress-plugin-llms") {
-    return parseVitepressPluginLlmsFormat(content);
-  }
-
-  if (format === "mintlify") {
-    return parseMintlifyFormat(content);
-  }
-
-  return parseLlmsTxt2ctxFormat(content);
+export function* unbind(content: string): Iterable<Page> {
+  yield* processLines(stringToLines(content));
 }
 
 /**
@@ -89,7 +166,7 @@ export function unbind(content: string): Page[] {
  * Automatically detects the format of the content:
  * - llms_txt2ctx format: `<doc title="..." desc="...">content</doc>` (generated by llms_txt2ctx CLI)
  * - vitepress-plugin-llms format: Markdown pages separated by `---` (generated by vitepress-plugin-llms)
- * - MCP format: Markdown pages with `# Title` followed by `Source: URL`
+ * - mintlify format: Markdown pages with `# Title` followed by `Source: URL` (generated by Mintlify)
  *
  * @param stream - A Web ReadableStream or AsyncIterable providing the content
  * @returns An AsyncIterable of Page objects
@@ -112,105 +189,5 @@ export function unbind(content: string): Page[] {
 export async function* unbindStream(
   stream: ReadableStream<Uint8Array> | AsyncIterable<Uint8Array | string>,
 ): AsyncIterable<Page> {
-  const textDecoder = new TextDecoder();
-  let parser:
-    | LlmsTxt2ctxStreamingParser
-    | VitepressPluginLlmsStreamingParser
-    | MintlifyStreamingParser
-    | null = null;
-  let formatDetectionBuffer = "";
-
-  /**
-   * Detect format and create appropriate parser
-   */
-  function createParser():
-    | LlmsTxt2ctxStreamingParser
-    | VitepressPluginLlmsStreamingParser
-    | MintlifyStreamingParser {
-    const format = detectFormat(formatDetectionBuffer);
-    let newParser:
-      | LlmsTxt2ctxStreamingParser
-      | VitepressPluginLlmsStreamingParser
-      | MintlifyStreamingParser;
-
-    if (format === "vitepress-plugin-llms") {
-      newParser = new VitepressPluginLlmsStreamingParser();
-    } else if (format === "mintlify") {
-      newParser = new MintlifyStreamingParser();
-    } else {
-      newParser = new LlmsTxt2ctxStreamingParser();
-    }
-
-    // Feed buffered data to parser
-    newParser.append(formatDetectionBuffer);
-    formatDetectionBuffer = "";
-    return newParser;
-  }
-
-  /**
-   * Process text chunk
-   */
-  function* processChunk(text: string): Generator<Page> {
-    if (parser === null) {
-      formatDetectionBuffer += text;
-
-      // Need enough data to detect format
-      if (formatDetectionBuffer.length >= 100) {
-        parser = createParser();
-        yield* parser.processBuffer();
-      }
-    } else {
-      parser.append(text);
-      yield* parser.processBuffer();
-    }
-  }
-
-  // Handle ReadableStream
-  if ("getReader" in stream) {
-    const reader = stream.getReader();
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const text = textDecoder.decode(value, { stream: true });
-        yield* processChunk(text);
-      }
-    } finally {
-      reader.releaseLock();
-    }
-  } else {
-    // Handle AsyncIterable
-    for await (const chunk of stream) {
-      const text =
-        typeof chunk === "string"
-          ? chunk
-          : textDecoder.decode(chunk, { stream: true });
-
-      yield* processChunk(text);
-    }
-  }
-
-  // Final flush
-  const finalText = textDecoder.decode();
-  if (finalText) {
-    yield* processChunk(finalText);
-  }
-
-  // Handle case where format wasn't detected due to small content
-  if (parser === null && formatDetectionBuffer) {
-    parser = createParser();
-  }
-
-  if (parser !== null) {
-    yield* parser.processBuffer();
-
-    // Flush remaining content for parsers that need it
-    if (
-      parser instanceof VitepressPluginLlmsStreamingParser ||
-      parser instanceof MintlifyStreamingParser
-    ) {
-      yield* parser.flush();
-    }
-  }
+  yield* processLinesAsync(toLines(stream));
 }
