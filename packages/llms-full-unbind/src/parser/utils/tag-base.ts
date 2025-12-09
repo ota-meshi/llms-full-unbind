@@ -1,6 +1,9 @@
 import type { Page, StreamingParser } from "../../types.ts";
-import type { ClosingTagToken, OpeningTagToken } from "../../utils/tokenize.ts";
-import { tokenize } from "../../utils/tokenize.ts";
+import type {
+  ClosingTagToken,
+  OpeningTagToken,
+} from "../../utils/html-tokenize.ts";
+import { tokenize } from "../../utils/html-tokenize.ts";
 
 /**
  * Base class for tag-based streaming parsers

@@ -13,7 +13,6 @@
  * ```
  */
 
-import { extractH1Title } from "../utils/extract-header-title.ts";
 import type { Page, StreamingParser } from "../types.ts";
 import { iterateMarkdownLinesWithoutCodeBlocks } from "../utils/iterate-md-lines.ts";
 
@@ -158,10 +157,8 @@ function* extractPages(lines: string[]): Generator<Page> {
     contents.shift();
   }
 
-  const title = contents.length > 0 ? extractH1Title(contents[0]) : null;
-
   yield {
-    title,
+    title: null,
     content: contents.join("\n").trim(),
     metadata: frontmatter ? { url: frontmatter.url } : {},
   };

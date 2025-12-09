@@ -7,6 +7,45 @@ A specialized parser designed to extract pages from the monolithic `llms-full.tx
 [![NPM license](https://img.shields.io/npm/l/llms-full-unbind.svg)][npm-package]
 [![NPM version](https://img.shields.io/npm/v/llms-full-unbind.svg)][npm-package]
 
+## Usage
+
+### Basic Usage
+
+Fetch the text content and unbind it in one go.
+
+```typescript
+import { unbind } from "llms-full-unbind";
+
+// 1. Fetch the remote llms-full.txt
+const response = await fetch("https://example.com/llms-full.txt");
+const text = await response.text();
+
+// 2. Unbind into pages
+const pages = Array.from(unbind(text));
+
+console.log(`Extracted ${pages.length} pages.`);
+```
+
+### Streaming Usage (Recommended)
+
+For large `llms-full.txt` files, use `unbindStream` to process data chunk-by-chunk directly from the network response. This minimizes memory usage.
+
+```typescript
+import { unbindStream } from "llms-full-unbind";
+
+const response = await fetch("https://example.com/llms-full.txt");
+
+if (!response.body) {
+  throw new Error("Response body is empty");
+}
+
+// Pipe the Web Stream directly into the parser
+for await (const page of unbindStream(response.body)) {
+  console.log(`Processed: ${page.title}`);
+  // e.g. Save to DB or display immediately
+}
+```
+
 ## Supported Formats
 
 This library automatically detects and parses five common `llms-full.txt` formats:
@@ -99,45 +138,6 @@ More content...
 
 ```bash
 npm install llms-full-unbind
-```
-
-## Usage
-
-### Basic Usage
-
-Fetch the text content and unbind it in one go.
-
-```typescript
-import { unbind } from "llms-full-unbind";
-
-// 1. Fetch the remote llms-full.txt
-const response = await fetch("https://example.com/llms-full.txt");
-const text = await response.text();
-
-// 2. Unbind into pages
-const pages = Array.from(unbind(text));
-
-console.log(`Extracted ${pages.length} pages.`);
-```
-
-### Streaming Usage (Recommended)
-
-For large `llms-full.txt` files, use `unbindStream` to process data chunk-by-chunk directly from the network response. This minimizes memory usage.
-
-```typescript
-import { unbindStream } from "llms-full-unbind";
-
-const response = await fetch("https://example.com/llms-full.txt");
-
-if (!response.body) {
-  throw new Error("Response body is empty");
-}
-
-// Pipe the Web Stream directly into the parser
-for await (const page of unbindStream(response.body)) {
-  console.log(`Processed: ${page.title}`);
-  // e.g. Save to DB or display immediately
-}
 ```
 
 ## API

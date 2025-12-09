@@ -21,6 +21,7 @@ import { MintlifyStreamingParser } from "./parser/mintlify.ts";
 import { H1StreamingParser } from "./parser/h1.ts";
 import { DocTagStreamingParser } from "./parser/doc-tag.ts";
 import { PageTagStreamingParser } from "./parser/page-tag.ts";
+import { extractH1Title } from "./utils/extract-header-title.ts";
 
 /**
  * Parser state for tracking format detection and buffering
@@ -136,9 +137,9 @@ function* processLines(lines: Iterable<string>) {
   };
 
   for (const line of lines) {
-    yield* processLine(line, state);
+    yield* processLine(line, state).map(adjustPage);
   }
-  yield* postprocessParserState(state);
+  yield* postprocessParserState(state).map(adjustPage);
 }
 
 /**
@@ -152,9 +153,47 @@ async function* processLinesAsync(lines: AsyncIterable<string>) {
   };
 
   for await (const line of lines) {
-    yield* processLine(line, state);
+    yield* processLine(line, state).map(adjustPage);
   }
-  yield* postprocessParserState(state);
+  yield* postprocessParserState(state).map(adjustPage);
+}
+
+/**
+ * Adjust page by inferring title if missing
+ * @param page - Page to adjust
+ * @returns Adjusted page with inferred title if necessary
+ */
+function adjustPage(page: Page): Page {
+  return {
+    ...page,
+    title: page.title || inferTitleFromContent(page.content),
+  };
+
+  /**
+   * Infer title from content by checking frontmatter or first H1 header
+   */
+  function inferTitleFromContent(content: string): string | null {
+    const trimmed = content.trim();
+    if (trimmed.startsWith("---\n")) {
+      const endIndex = trimmed.indexOf("\n---", 4);
+      if (
+        endIndex > 0 &&
+        (endIndex + 4 === trimmed.length || trimmed[endIndex + 4] === "\n")
+      ) {
+        const frontmatterBlock = trimmed.slice(4, endIndex);
+        const title = /(?:^|\n)\s*title\s*:\s*([^\n]+)/v.exec(
+          frontmatterBlock,
+        )?.[1];
+        if (title) return title.trim();
+      }
+    }
+
+    for (const line of stringToLines(content)) {
+      const title = extractH1Title(line);
+      if (title) return title;
+    }
+    return null;
+  }
 }
 
 /**

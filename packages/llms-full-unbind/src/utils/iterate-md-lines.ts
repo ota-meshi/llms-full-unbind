@@ -1,4 +1,4 @@
-const RE_EXTRACT_CODE_FENCE = /^[`~]{3,}/;
+const RE_EXTRACT_CODE_FENCE = /^(?:`{3,}|~{3,})/;
 
 /**
  * Iterate over markdown lines, skipping code blocks

@@ -41,6 +41,64 @@ export type Token =
   | DoctypeToken
   | TextToken;
 
+class MDContext {
+  private readonly input: string;
+
+  public constructor(input: string) {
+    this.input = input;
+  }
+
+  /**
+   * Skip code fences in the input
+   */
+  public skipCodeFences(pos: number): number {
+    const openingFence = this.parseFence(pos);
+    if (!openingFence) return pos;
+    for (let index = openingFence.next; index < this.input.length; index++) {
+      const closingFence = this.parseFence(index);
+      if (
+        !closingFence ||
+        closingFence.meta ||
+        !closingFence.fence.startsWith(openingFence.fence[0]) ||
+        openingFence.fence.length < closingFence.fence.length
+      ) {
+        continue;
+      }
+      return closingFence.next;
+    }
+    return pos;
+  }
+
+  /**
+   * Parse code fence at given position
+   */
+  public parseFence(
+    pos: number,
+  ): { fence: string; meta: string | null; next: number } | null {
+    if (this.input[pos] !== "\n" && this.input[pos] !== "\r") {
+      return null;
+    }
+    let curr = pos;
+    while (curr < this.input.length && /\s/v.test(this.input[curr])) curr++;
+    const char = this.input[curr];
+    if (char !== "`" && char !== "~") {
+      return null;
+    }
+    let fence = char;
+    while (curr < this.input.length && this.input[curr] === char) {
+      fence += char;
+      curr++;
+    }
+    if (fence.length < 3) {
+      return null;
+    }
+    while (curr < this.input.length && /[^\n\r]/v.test(this.input[curr]))
+      curr++;
+    const meta = this.input.slice(pos + fence.length, curr).trim() || null;
+    return { fence, meta, next: curr };
+  }
+}
+
 /**
  * Tokenize HTML-like content into tokens
  * Yields tags, comments, CDATA, DOCTYPE, and text nodes in document order
@@ -51,7 +109,10 @@ export function* tokenize(input: string): Generator<Token> {
   let pos = 0;
   let lastTokenEnd = 0;
 
+  const md = new MDContext(input);
+
   while (pos < input.length) {
+    pos = md.skipCodeFences(pos);
     // Try to match a tag or special construct
     if (input[pos] === "<") {
       const token =

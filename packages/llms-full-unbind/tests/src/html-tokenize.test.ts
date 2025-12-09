@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { describe, it } from "node:test";
-import { tokenize } from "../../src/utils/tokenize.ts";
+import { tokenize } from "../../src/utils/html-tokenize.ts";
 
 describe("tokenize", () => {
   it("should tokenize simple text", () => {
