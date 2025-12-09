@@ -3,7 +3,8 @@ const RE_EXTRACT_CODE_FENCE = /^[`~]{3,}/;
 /**
  * Iterate over markdown lines, skipping code blocks
  * @param lines - Array of markdown lines
- * @returns Generator yielding lines outside code blocks
+ * @param option - Options for iteration (startIndex: starting line index)
+ * @returns Generator yielding lines outside code blocks with their original indices
  */
 export function* iterateMarkdownLinesWithoutCodeBlocks(
   lines: string[],

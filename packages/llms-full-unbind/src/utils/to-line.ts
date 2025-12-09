@@ -1,5 +1,7 @@
 /**
- * Convert string to lines
+ * Convert string to lines, splitting on various line break types (CR, LF, CRLF)
+ * @param input - Input string to convert
+ * @returns Generator yielding individual lines
  */
 export function* stringToLines(input: string): Iterable<string> {
   const reLineBreak = /\r\n|\n|\r/gv;
@@ -18,6 +20,9 @@ export function* stringToLines(input: string): Iterable<string> {
 }
 /**
  * Convert various input types to lines
+ * Handles Web ReadableStream, AsyncIterable, or string inputs
+ * @param input - Input: ReadableStream, AsyncIterable, or string
+ * @returns Async generator yielding individual lines
  */
 export async function* toLines(
   input:
@@ -44,6 +49,8 @@ export async function* toLines(
 
 /**
  * Convert ReadableStreamDefaultReader to lines
+ * @param reader - ReadableStreamDefaultReader to convert
+ * @returns Async iterable yielding lines
  */
 function readerToLines(
   reader: ReadableStreamDefaultReader<Uint8Array>,
@@ -63,7 +70,10 @@ function readerToLines(
 }
 
 /**
- * Convert AsyncIterable to lines
+ * Convert AsyncIterable of chunks to lines
+ * Handles both Uint8Array (decoded via TextDecoder) and string chunks
+ * @param asyncIterable - AsyncIterable of Uint8Array or string chunks
+ * @returns Async generator yielding individual lines
  */
 async function* asyncIterableToLines(
   asyncIterable: AsyncIterable<Uint8Array | string>,

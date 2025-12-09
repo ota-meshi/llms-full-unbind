@@ -1,6 +1,7 @@
 /**
  * HTML tokenizer
- * Parses HTML-like content into tokens: tags, comments, CDATA, DOCTYPE, and text
+ * Parses HTML-like content into tokens: tags, comments, CDATA, DOCTYPE, and text nodes
+ * Supports tag attributes and provides position information for each token
  */
 
 export type TokenRange = {
@@ -41,7 +42,10 @@ export type Token =
   | TextToken;
 
 /**
- * Tokenize HTML-like content into tokens (generator)
+ * Tokenize HTML-like content into tokens
+ * Yields tags, comments, CDATA, DOCTYPE, and text nodes in document order
+ * @param input - HTML-like content to tokenize
+ * @returns Generator yielding Token objects with position information
  */
 export function* tokenize(input: string): Generator<Token> {
   let pos = 0;
@@ -85,6 +89,9 @@ export function* tokenize(input: string): Generator<Token> {
 
 /**
  * Parse opening tag or self-closing tag from input at given position
+ * @param input - Input string to parse
+ * @param startPos - Position of "<" character
+ * @returns Parsed tag token or null if not a valid tag
  */
 function parseOpeningTag(
   input: string,

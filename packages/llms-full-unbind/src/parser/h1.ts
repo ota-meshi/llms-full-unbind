@@ -16,16 +16,17 @@ import {
 import type { Page, StreamingParser } from "../types.ts";
 import { VitepressPluginLlmsStreamingParser } from "./vitepress-plugin-llms.ts";
 import { MintlifyStreamingParser } from "./mintlify.ts";
-import { LlmsTxt2ctxStreamingParser } from "./llms-txt2ctx.ts";
 import { iterateMarkdownLinesWithoutCodeBlocks } from "../utils/iterate-md-lines.ts";
+import { PageTagStreamingParser } from "./page-tag.ts";
+import { DocTagStreamingParser } from "./doc-tag.ts";
 
 export class H1StreamingParser implements StreamingParser {
   private readonly bufferLines: string[] = [];
 
   /**
-   * Detect if the current lines match the format
+   * Detect if the current lines match the H1 header-based format
    * @param lines - Array of lines to check
-   * @returns True if the lines match the format
+   * @returns "certain" if confident match, "maybe" if possible match, "no" if no match
    */
   public static detect(lines: string[]): "certain" | "maybe" | "no" {
     let h1Count = 0;
@@ -41,7 +42,8 @@ export class H1StreamingParser implements StreamingParser {
           otherHeaderCount > 30 &&
           VitepressPluginLlmsStreamingParser.detect(lines) === "no" &&
           MintlifyStreamingParser.detect(lines) === "no" &&
-          LlmsTxt2ctxStreamingParser.detect(lines) === "no"
+          DocTagStreamingParser.detect(lines) === "no" &&
+          PageTagStreamingParser.detect(lines) === "no"
         ) {
           // If there are too many other headers, and no other parser matches, it will assume it's H1 style.
           return "certain";
