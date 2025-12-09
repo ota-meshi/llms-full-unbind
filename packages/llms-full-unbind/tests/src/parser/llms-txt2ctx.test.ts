@@ -7,7 +7,7 @@
 
 import assert from "node:assert";
 import { describe, it } from "node:test";
-import { unbind, unbindStream, type Page } from "../../src/index.ts";
+import { unbind, unbindStream, type Page } from "../../../src/index.ts";
 
 /**
  * Helper function to create a ReadableStream from a string
@@ -60,7 +60,8 @@ describe("unbind (llms_txt2ctx format)", () => {
     assert.strictEqual(pages[0].title, "Test Title");
     assert.strictEqual(pages[0].content, "Test Content");
     assert.deepStrictEqual(pages[0].metadata, {
-      description: "Test Description",
+      title: "Test Title",
+      desc: "Test Description",
     });
   });
 
@@ -76,7 +77,7 @@ describe("unbind (llms_txt2ctx format)", () => {
     assert.strictEqual(pages[0].title, "First");
     assert.strictEqual(pages[1].title, "Second");
     assert.strictEqual(pages[2].title, "Third");
-    assert.deepStrictEqual(pages[2].metadata, {});
+    assert.deepStrictEqual(pages[2].metadata, { title: "Third" });
   });
 
   it("should handle empty content", () => {
@@ -109,7 +110,7 @@ describe("unbind (llms_txt2ctx format)", () => {
     assert.strictEqual(pages.length, 1);
     assert.strictEqual(pages[0].title, "Only Title");
     assert.strictEqual(pages[0].content, "Content here");
-    assert.deepStrictEqual(pages[0].metadata, {});
+    assert.deepStrictEqual(pages[0].metadata, { title: "Only Title" });
   });
 
   it("should handle multiline content", () => {

@@ -7,7 +7,7 @@
 
 import assert from "node:assert";
 import { describe, it } from "node:test";
-import { unbind, unbindStream, type Page } from "../../src/index.ts";
+import { unbind, unbindStream, type Page } from "../../../src/index.ts";
 
 /**
  * Helper function to create a ReadableStream from a string
