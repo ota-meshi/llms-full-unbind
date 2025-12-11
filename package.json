@@ -41,7 +41,8 @@
     "eslint-fix": "eslint . --fix",
     "test": "pnpm -r run test",
     "cover": "pnpm -r run cover",
-    "changeset:version": "changeset version && pnpm install --lockfile-only && git add --all",
+    "update-resources": "pnpm run build && pnpm -r run update-resources",
+    "changeset:version": "changeset version && pnpm run update-resources && git add --all",
     "changeset:publish": "pnpm run build && changeset publish"
   },
   "repository": {

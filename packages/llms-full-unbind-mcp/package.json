@@ -34,7 +34,8 @@
     "test": "node --test tests/src/**/*.ts",
     "cover": "c8 --reporter=lcov --reporter=text pnpm run test",
     "type-check": "tsc --noEmit",
-    "inspector": "npm run build && npx @modelcontextprotocol/inspector node ./lib/cli.js https://vuejs.org/llms-full.txt"
+    "inspector": "npm run build && npx @modelcontextprotocol/inspector node ./lib/cli.js https://vuejs.org/llms-full.txt",
+    "update-resources": "node ./tools/update-readme.ts"
   },
   "repository": {
     "type": "git",
