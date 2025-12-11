@@ -33,7 +33,8 @@
     "build": "tsdown",
     "test": "node --test tests/src/**/*.ts",
     "cover": "c8 --reporter=lcov --reporter=text pnpm run test",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "inspector": "npm run build && npx @modelcontextprotocol/inspector node ./lib/cli.js https://vuejs.org/llms-full.txt"
   },
   "repository": {
     "type": "git",

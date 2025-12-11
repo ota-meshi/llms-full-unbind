@@ -26,12 +26,12 @@ export async function runCli(): Promise<void> {
           type: "positional",
           description: "URLs to llms-full.txt files",
           multiple: true,
-          required: true,
+          // required: true,
         },
       },
       run: async (options) => {
         const server = new LLMsFullUnbindMcpServer({
-          llmsFullTxtURLs: options.values["llms-full-txt-url"],
+          llmsFullTxtURLs: options.positionals,
         });
 
         const transport = new StdioServerTransport();
