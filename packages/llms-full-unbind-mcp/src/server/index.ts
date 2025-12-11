@@ -53,7 +53,7 @@ export class LLMsFullUnbindMcpServer {
         inputSchema: {
           path: z.string().describe("The path of the document."),
         },
-        outputSchema: z.string().describe("The content of the document."),
+        // outputSchema: z.string().describe("The content of the document."),
       },
       async (args) => {
         return await readDoc(args.path, this.searchIndex);
@@ -151,13 +151,15 @@ async function readDoc(pathName: string, searchIndex: SearchIndex) {
 async function searchDoc(query: string, searchIndex: SearchIndex) {
   const matches = await searchIndex.search(queryToRegExp(query) ?? query);
 
+  const output = { matches: matches.slice(0, SEARCH_LIMIT) };
   return {
     content: [
       {
         type: "text" as const,
         mimeType: "application/json",
-        text: JSON.stringify({ matches: matches.slice(0, SEARCH_LIMIT) }),
+        text: JSON.stringify(output),
       },
     ],
+    structuredContent: output,
   };
 }
