@@ -92,8 +92,8 @@ importers:
         specifier: ^1.0.0
         version: 1.24.3(zod@4.1.13)
       gunshi:
-        specifier: ^0.26.3
-        version: 0.26.3
+        specifier: ^0.27.0-beta.6
+        version: 0.27.0-beta.6
       llms-full-unbind:
         specifier: workspace:*
         version: link:../llms-full-unbind
@@ -637,8 +637,8 @@ packages:
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
 
-  args-tokens@0.20.1:
-    resolution: {integrity: sha512-pQ5R5TsJyx94zsgSCCQ9kzOgUfMmI4bkqNjgSSt2C92mzPCvovoUMMW6HqR+35mHZ0cb1++MD2uAOLm62sGC+Q==}
+  args-tokens@0.23.0:
+    resolution: {integrity: sha512-VZETsQmpEGO7A9adjfIOTyZuxKzurUas9kh1Hm0WGhFq8dOyw50P6OjiTwKyURwnmDabw0DbFjI+BUucJfCtnQ==}
     engines: {node: '>= 20'}
 
   array-union@2.1.0:
@@ -1277,8 +1277,8 @@ packages:
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
-  gunshi@0.26.3:
-    resolution: {integrity: sha512-x/CaxovzDA3KMkrjqow7M1dnsO1CxGMNabBaeGTGdVNtjOMN1G/eK7vjKeJ+zHdFIsWHmo47YQ2DQIESUut2+A==}
+  gunshi@0.27.0-beta.6:
+    resolution: {integrity: sha512-tNMOgKmrpLUjsCD0iwEFX0jAnYKjRPeoRniVFqKe6eoa+v7Tcx/G+cMCVhIa7mK+FSIaJy4P5yMyyK6OsNLJGw==}
     engines: {node: '>= 20'}
 
   has-flag@4.0.0:
@@ -2973,7 +2973,7 @@ snapshots:
 
   argparse@2.0.1: {}
 
-  args-tokens@0.20.1: {}
+  args-tokens@0.23.0: {}
 
   array-union@2.1.0: {}
 
@@ -3671,9 +3671,9 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  gunshi@0.26.3:
+  gunshi@0.27.0-beta.6:
     dependencies:
-      args-tokens: 0.20.1
+      args-tokens: 0.23.0
 
   has-flag@4.0.0: {}
 
