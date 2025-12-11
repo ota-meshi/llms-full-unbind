@@ -4,6 +4,6 @@
     "baseUrl": ".",
     "outDir": "lib"
   },
-  "include": ["src/**/*", "tests/src/**/*", "tsdown.config.ts"],
+  "include": ["src/**/*", "tests/src/**/*", "tsdown.config.ts", "tools/**/*"],
   "exclude": ["lib/**/*"]
 }
