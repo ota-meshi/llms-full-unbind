@@ -7,6 +7,8 @@ A specialized parser designed to extract pages from the monolithic `llms-full.tx
 [![NPM license](https://img.shields.io/npm/l/llms-full-unbind.svg)][npm-package]
 [![NPM version](https://img.shields.io/npm/v/llms-full-unbind.svg)][npm-package]
 
+This library is primarily intended for use in the [llms-full-unbind-mcp](../llms-full-unbind-mcp/README.md) package, but can be used in other projects as well.
+
 ## Usage
 
 ### Basic Usage
