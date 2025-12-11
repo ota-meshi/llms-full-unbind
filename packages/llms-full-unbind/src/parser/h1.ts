@@ -13,12 +13,9 @@ import {
   extractH1Title,
   extractHeaderTitle,
 } from "../utils/extract-header-title.ts";
-import type { Page, StreamingParser } from "../types.ts";
-import { VitepressPluginLlmsStreamingParser } from "./vitepress-plugin-llms.ts";
-import { MintlifyStreamingParser } from "./mintlify.ts";
+import type { DetectResult, Page, StreamingParser } from "../types.ts";
 import { iterateMarkdownLinesWithoutCodeBlocks } from "../utils/iterate-md-lines.ts";
-import { PageTagStreamingParser } from "./page-tag.ts";
-import { DocTagStreamingParser } from "./doc-tag.ts";
+import { streamingParsers } from "./parsers.ts";
 
 export class H1StreamingParser implements StreamingParser {
   private readonly bufferLines: string[] = [];
@@ -26,9 +23,9 @@ export class H1StreamingParser implements StreamingParser {
   /**
    * Detect if the current lines match the H1 header-based format
    * @param lines - Array of lines to check
-   * @returns "certain" if confident match, "maybe" if possible match, "no" if no match
+   * @returns "certain" if confident match, "potential" if possible match, "unknown" if no match
    */
-  public static detect(lines: string[]): "certain" | "maybe" | "no" {
+  public static detect(lines: string[]): DetectResult {
     let h1Count = 0;
     let otherHeaderCount = 0;
     for (const { line } of iterateMarkdownLinesWithoutCodeBlocks(lines)) {
@@ -40,21 +37,22 @@ export class H1StreamingParser implements StreamingParser {
       if (h1Count >= 2) {
         if (
           otherHeaderCount > 30 &&
-          VitepressPluginLlmsStreamingParser.detect(lines) === "no" &&
-          MintlifyStreamingParser.detect(lines) === "no" &&
-          DocTagStreamingParser.detect(lines) === "no" &&
-          PageTagStreamingParser.detect(lines) === "no"
+          streamingParsers.every(
+            (parser) =>
+              parser !== H1StreamingParser &&
+              parser.detect(lines) === "unknown",
+          )
         ) {
           // If there are too many other headers, and no other parser matches, it will assume it's H1 style.
           return "certain";
         }
-        return "maybe";
+        return "potential";
       }
     }
     if (h1Count > 0) {
-      return "maybe";
+      return "potential";
     }
-    return "no";
+    return "unknown";
   }
 
   /**
@@ -103,8 +101,8 @@ export class H1StreamingParser implements StreamingParser {
  */
 function* extractPages(lines: string[]): Generator<Page> {
   const contents: string[] = [];
-  for (const element of lines) {
-    const headerTitle = extractH1Title(element);
+  for (const line of lines) {
+    const headerTitle = extractH1Title(line);
     if (headerTitle != null) {
       // Remove starting empty lines
       while (contents.length > 0 && !contents[0].trim()) {
@@ -120,6 +118,7 @@ function* extractPages(lines: string[]): Generator<Page> {
       }
       contents.length = 0;
     }
+    contents.push(line);
   }
   // Remove starting empty lines
   while (contents.length > 0 && !contents[0].trim()) {

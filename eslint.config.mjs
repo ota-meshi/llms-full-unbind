@@ -20,6 +20,8 @@ export default defineConfig([
       "coverage/**",
       "lib/**",
       "packages/*/lib/**",
+      "packages/*/coverage/**",
+      "packages/*/node_modules/**",
       "!.github/",
       "!.vscode/",
       "!.devcontainer/",
@@ -60,6 +62,7 @@ export default defineConfig([
       "func-style": "off",
       "n/file-extension-in-import": "off",
       "one-var": "off",
+      "no-return-await": "off",
     },
   },
   {
@@ -128,7 +131,10 @@ export default defineConfig([
       "markdown-links/no-dead-urls": [
         "error",
         {
-          ignoreUrls: ["https://www.npmjs.com/package/llms-full-unbind"],
+          ignoreUrls: [
+            "https://www.npmjs.com/package/llms-full-unbind",
+            "https://github.com/ota-meshi/llms-full-unbind",
+          ],
           allowedAnchors: {
             "/^https:\\/\\/eslint-online-playground\\.netlify\\.app\\//u":
               "/.*/u",

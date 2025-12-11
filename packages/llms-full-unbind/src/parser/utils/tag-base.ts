@@ -1,4 +1,4 @@
-import type { Page, StreamingParser } from "../../types.ts";
+import type { DetectResult, Page, StreamingParser } from "../../types.ts";
 import type {
   ClosingTagToken,
   OpeningTagToken,
@@ -14,15 +14,12 @@ export class TagBaseStreamingParser implements StreamingParser {
    * Detect if content contains matching tag-based format
    * @param lines - Array of lines to check
    * @param tagName - Tag name to detect (e.g., "doc", "page")
-   * @returns "certain" if matching tag pairs found, "no" otherwise
+   * @returns "certain" if matching tag pairs found, "unknown" otherwise
    */
-  public static detect(
-    lines: string[],
-    tagName: string,
-  ): "certain" | "maybe" | "no" {
+  public static detect(lines: string[], tagName: string): DetectResult {
     if (!lines.findLast((line) => line.includes(`</${tagName}`))) {
       // Does not contain a closing tag
-      return "no";
+      return "unknown";
     }
     const content = lines.join("\n");
 
@@ -43,7 +40,7 @@ export class TagBaseStreamingParser implements StreamingParser {
       }
     }
 
-    return "no";
+    return "unknown";
   }
 
   private input = "";

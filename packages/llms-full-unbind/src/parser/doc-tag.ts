@@ -6,6 +6,7 @@
  * Used by [fastht.ml](https://fastht.ml/docs/llms-ctx-full.txt) and similar projects.
  */
 
+import type { DetectResult } from "../types.ts";
 import { TagBaseStreamingParser } from "./utils/tag-base.ts";
 
 /**
@@ -15,7 +16,7 @@ export class DocTagStreamingParser extends TagBaseStreamingParser {
   /**
    * Detect if the content matches <doc> tag based format
    */
-  public static detect(lines: string[]): "certain" | "maybe" | "no" {
+  public static detect(lines: string[]): DetectResult {
     return TagBaseStreamingParser.detect(lines, "doc");
   }
 

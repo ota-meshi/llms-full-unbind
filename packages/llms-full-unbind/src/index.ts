@@ -11,17 +11,12 @@
  */
 
 // Re-export types
-export type { Page, StreamingParser } from "./types.ts";
+export type { Page } from "./types.ts";
 
-// Import types and parsers
-import type { Page, StreamingParser } from "./types.ts";
+import type { DetectResult, Page, StreamingParser } from "./types.ts";
 import { stringToLines, toLines } from "./utils/to-line.ts";
-import { VitepressPluginLlmsStreamingParser } from "./parser/vitepress-plugin-llms.ts";
-import { MintlifyStreamingParser } from "./parser/mintlify.ts";
-import { H1StreamingParser } from "./parser/h1.ts";
-import { DocTagStreamingParser } from "./parser/doc-tag.ts";
-import { PageTagStreamingParser } from "./parser/page-tag.ts";
 import { extractH1Title } from "./utils/extract-header-title.ts";
+import { streamingParsers } from "./parser/parsers.ts";
 
 /**
  * Parser state for tracking format detection and buffering
@@ -31,12 +26,12 @@ type ParserState = {
   bufferLines: string[];
 };
 
-type ParserDetector = (detectKind: "certain" | "maybe" | "no") => boolean;
+type ParserDetector = (detectResult: DetectResult) => boolean;
 
-const intermediateDetector: ParserDetector = (detectKind) =>
-  detectKind === "certain";
-const finalDetector: ParserDetector = (detectKind) =>
-  detectKind === "certain" || detectKind === "maybe";
+const intermediateDetector: ParserDetector = (detectResult) =>
+  detectResult === "certain";
+const finalDetector: ParserDetector = (detectResult) =>
+  detectResult === "certain" || detectResult === "potential";
 
 /**
  * Detect format and instantiate appropriate parser
@@ -55,22 +50,13 @@ const finalDetector: ParserDetector = (detectKind) =>
  */
 function detectParser(
   bufferLines: string[],
-  checkDetect: (detectKind: "certain" | "maybe" | "no") => boolean,
+  checkDetect: ParserDetector,
 ): StreamingParser | null {
-  if (checkDetect(VitepressPluginLlmsStreamingParser.detect(bufferLines))) {
-    return new VitepressPluginLlmsStreamingParser();
-  }
-  if (checkDetect(MintlifyStreamingParser.detect(bufferLines))) {
-    return new MintlifyStreamingParser();
-  }
-  if (checkDetect(DocTagStreamingParser.detect(bufferLines))) {
-    return new DocTagStreamingParser();
-  }
-  if (checkDetect(PageTagStreamingParser.detect(bufferLines))) {
-    return new PageTagStreamingParser();
-  }
-  if (checkDetect(H1StreamingParser.detect(bufferLines))) {
-    return new H1StreamingParser();
+  for (const parser of streamingParsers) {
+    if (checkDetect(parser.detect(bufferLines))) {
+      // eslint-disable-next-line new-cap -- It's a class constructor
+      return new parser();
+    }
   }
   return null;
 }

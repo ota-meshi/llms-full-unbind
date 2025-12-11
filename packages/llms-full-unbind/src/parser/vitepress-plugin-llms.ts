@@ -13,7 +13,7 @@
  * ```
  */
 
-import type { Page, StreamingParser } from "../types.ts";
+import type { DetectResult, Page, StreamingParser } from "../types.ts";
 import { iterateMarkdownLinesWithoutCodeBlocks } from "../utils/iterate-md-lines.ts";
 
 /**
@@ -36,11 +36,11 @@ export class VitepressPluginLlmsStreamingParser implements StreamingParser {
   /**
    * Detect if the current lines match the vitepress-plugin-llms format
    * @param lines - Array of lines to check
-   * @returns "certain" if confident match, "maybe" if possible match, "no" if no match
+   * @returns "certain" if confident match, "potential" if possible match, "unknown" if no match
    */
-  public static detect(lines: string[]): "certain" | "maybe" | "no" {
+  public static detect(lines: string[]): DetectResult {
     const contentIndex = lines.findIndex((line) => line.trim());
-    if (contentIndex === -1) return "no";
+    if (contentIndex === -1) return "unknown";
     let frontmatterFound = false;
     for (const { index } of iterateMarkdownLinesWithoutCodeBlocks(lines, {
       startIndex: contentIndex,
@@ -51,7 +51,7 @@ export class VitepressPluginLlmsStreamingParser implements StreamingParser {
       if (index === contentIndex) continue;
       return "certain";
     }
-    return frontmatterFound ? "maybe" : "no";
+    return frontmatterFound ? "potential" : "unknown";
   }
 
   /**

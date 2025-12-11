@@ -8,7 +8,7 @@
  */
 
 import { extractHeaderTitle } from "../utils/extract-header-title.ts";
-import type { Page, StreamingParser } from "../types.ts";
+import type { DetectResult, Page, StreamingParser } from "../types.ts";
 import { iterateMarkdownLinesWithoutCodeBlocks } from "../utils/iterate-md-lines.ts";
 
 type HeaderBlock = {
@@ -25,11 +25,11 @@ export class MintlifyStreamingParser implements StreamingParser {
   /**
    * Detect if the content matches Mintlify format
    * @param lines - Array of lines to check
-   * @returns "certain" if confident match, "maybe" if possible match, "no" if no match
+   * @returns "certain" if confident match, "potential" if possible match, "unknown" if no match
    */
-  public static detect(lines: string[]): "certain" | "maybe" | "no" {
+  public static detect(lines: string[]): DetectResult {
     const contentIndex = lines.findIndex((line) => line.trim());
-    if (contentIndex === -1) return "no";
+    if (contentIndex === -1) return "unknown";
     let blockFound = false;
     for (const { index } of iterateMarkdownLinesWithoutCodeBlocks(lines, {
       startIndex: contentIndex,
@@ -40,7 +40,7 @@ export class MintlifyStreamingParser implements StreamingParser {
       if (index === contentIndex) continue;
       return "certain";
     }
-    return blockFound ? "maybe" : "no";
+    return blockFound ? "potential" : "unknown";
   }
 
   private readonly bufferLines: string[] = [];

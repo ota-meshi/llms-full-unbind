@@ -11,31 +11,52 @@ This file provides project guidelines for AI coding agents.
 ```text
 llms-full-unbind/
 ├── packages/
-│   └── llms-full-unbind/           # Main package
+│   ├── llms-full-unbind/           # Main package
+│   │   ├── src/
+│   │   │   ├── index.ts            # Entry point (exports unbind, unbindStream)
+│   │   │   ├── types.ts            # Common type definitions (Page, StreamingParser)
+│   │   │   ├── parser/
+│   │   │   │   ├── doc-tag.ts                      # <doc> tag format parser
+│   │   │   │   ├── page-tag.ts                     # <page> tag format parser
+│   │   │   │   ├── h1.ts                           # H1 header format parser
+│   │   │   │   ├── vitepress-plugin-llms.ts       # VitePress plugin format parser
+│   │   │   │   ├── mintlify.ts                     # Mintlify format parser
+│   │   │   │   └── utils/
+│   │   │   │       └── tag-base.ts                 # Shared tag-based parser logic
+│   │   │   └── utils/
+│   │   │       ├── to-line.ts                      # String to lines conversion
+│   │   │       ├── extract-header-title.ts         # Markdown header extraction
+│   │   │       ├── iterate-md-lines.ts             # Iterate lines outside code blocks
+│   │   │       └── html-tokenize.ts                # HTML tokenizer
+│   │   ├── tests/
+│   │   │   └── src/
+│   │   │       ├── index.test.ts                   # Integration tests
+│   │   │       ├── html-tokenize.test.ts           # Tokenizer tests
+│   │   │       └── parser/
+│   │   │           ├── doc-tag.test.ts             # <doc> tag format tests
+│   │   │           ├── h1.test.ts                  # H1 header format tests (comprehensive)
+│   │   │           ├── mintlify.test.ts            # Mintlify format tests
+│   │   │           └── vitepress-plugin-llms.test.ts # VitePress plugin tests
+│   │   ├── lib/                    # Build output
+│   │   ├── tsdown.config.ts        # Build configuration
+│   │   ├── package.json            # Package metadata
+│   │   ├── tsconfig.json           # TypeScript configuration
+│   │   ├── play.ts                 # Playground file
+│   │   └── README.md               # Package documentation
+│   └── llms-full-unbind-mcp/       # MCP server package
 │       ├── src/
-│       │   ├── index.ts            # Entry point (exports unbind, unbindStream)
-│       │   ├── types.ts            # Common type definitions (Page, StreamingParser)
-│       │   ├── parser/
-│       │   │   ├── doc-tag.ts                      # <doc> tag format parser
-│       │   │   ├── page-tag.ts                     # <page> tag format parser
-│       │   │   ├── h1.ts                           # H1 header format parser
-│       │   │   ├── vitepress-plugin-llms.ts       # VitePress plugin format parser
-│       │   │   ├── mintlify.ts                     # Mintlify format parser
-│       │   │   └── utils/
-│       │   │       └── tag-base.ts                 # Shared tag-based parser logic
+│       │   ├── cli.ts              # CLI entry (stdio MCP server)
+│       │   ├── index.ts            # Package entry
+│       │   ├── search/
+│       │   │   └── search-index.ts # llms-full.txt indexing and search
+│       │   ├── server/
+│       │   │   └── index.ts        # MCP tool definitions
 │       │   └── utils/
-│       │       ├── to-line.ts                      # String to lines conversion
-│       │       ├── extract-header-title.ts         # Markdown header extraction
-│       │       ├── iterate-md-lines.ts             # Iterate lines outside code blocks
-│       │       └── tokenize.ts                     # HTML tokenizer
+│       │       ├── fetch-body.ts   # Fetch helper with proxy support
+│       │       └── query-to-regexp.ts # Parse regex-style queries
 │       ├── tests/
 │       │   └── src/
-│       │       ├── index.test.ts                   # Integration tests
-│       │       ├── tokenize.test.ts                # Tokenizer tests
-│       │       └── parser/
-│       │           ├── doc-tag.test.ts             # <doc> tag format tests
-│       │           ├── mintlify.test.ts            # Mintlify format tests
-│       │           └── vitepress-plugin-llms.test.ts # VitePress plugin tests
+│       │       └── search-index.test.ts # Search index and query parser tests
 │       ├── lib/                    # Build output
 │       ├── tsdown.config.ts        # Build configuration
 │       ├── package.json            # Package metadata
@@ -241,9 +262,29 @@ The codebase is organized by format type with shared parsing utilities:
 - Run tests before building to verify functionality
 - Add corresponding tests when adding new features
 - Ensure no ESLint errors before committing
-- Parser detection logic prioritizes "certain" matches over "maybe" matches
+- Parser detection logic prioritizes "certain" matches over "potential" matches
 - HTML tokenizer supports tag attributes, comments, CDATA, and DOCTYPE declarations
 - All parsers implement the `StreamingParser` interface for consistent streaming behavior
+
+## MCP Server Package (`llms-full-unbind-mcp`)
+
+The MCP (Model Context Protocol) server provides integration with Claude and other AI tools. It exposes the llms-full-unbind parser as MCP tools.
+
+### Features
+
+- **parse_llms_txt**: Tool to parse llms-full.txt files and extract individual pages
+- Supports all formats that the main package supports
+- StdIO transport for seamless integration
+
+### Usage
+
+```bash
+# Build the MCP server
+pnpm --filter llms-full-unbind-mcp run build
+
+# Use in Claude configuration
+# Add to your Claude config pointing to the built lib/index.js
+```
 
 ## Maintaining This File
 

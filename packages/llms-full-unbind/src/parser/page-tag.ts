@@ -7,6 +7,7 @@
  * For example: https://developers.cloudflare.com/llms-full.txt
  */
 
+import type { DetectResult } from "../types.ts";
 import { TagBaseStreamingParser } from "./utils/tag-base.ts";
 
 /**
@@ -16,7 +17,7 @@ export class PageTagStreamingParser extends TagBaseStreamingParser {
   /**
    * Detect if the content matches <page> tag based format
    */
-  public static detect(lines: string[]): "certain" | "maybe" | "no" {
+  public static detect(lines: string[]): DetectResult {
     return TagBaseStreamingParser.detect(lines, "page");
   }
 

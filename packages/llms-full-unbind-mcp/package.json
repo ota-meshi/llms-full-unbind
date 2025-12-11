@@ -1,0 +1,43 @@
+{
+  "name": "llms-full-unbind-mcp",
+  "version": "0.0.0",
+  "description": "Model Context Protocol server for llms-full-unbind",
+  "type": "module",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "bin": {
+    "llms-full-unbind-mcp": "./lib/cli.js"
+  },
+  "files": [
+    "lib"
+  ],
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "node --test tests/src/**/*.test.ts",
+    "cover": "c8 --reporter=lcov --reporter=text pnpm run test",
+    "lint": "eslint .",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "gunshi": "^0.26.3",
+    "llms-full-unbind": "workspace:*",
+    "minisearch": "^7.2.0",
+    "undici": "^7.16.0",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=24.11.1"
+  }
+}

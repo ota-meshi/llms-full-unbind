@@ -6,7 +6,7 @@ export interface Page {
   title: string | null;
   /** The extracted text content */
   content: string;
-  /** Optional metadata from the page */
+  /** Optional metadata from the page (format-specific) */
   metadata: Record<string, unknown>;
 }
 
@@ -24,3 +24,5 @@ export interface StreamingParser {
    */
   flush?(): Iterable<Page>;
 }
+
+export type DetectResult = "certain" | "potential" | "unknown";

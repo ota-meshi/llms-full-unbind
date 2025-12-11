@@ -16,11 +16,11 @@
     "./package.json": "./package.json"
   },
   "engines": {
-    "node": ">=24.0.0"
+    "node": ">=24.11.1"
   },
   "scripts": {
     "build": "tsdown",
-    "test": "node --experimental-strip-types --test tests/src/**/*.ts",
+    "test": "node --test tests/src/**/*.ts",
     "cover": "c8 --reporter=lcov --reporter=text pnpm run test"
   },
   "repository": {
