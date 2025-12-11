@@ -1,6 +1,6 @@
 # llms-full-unbind-mcp
 
-This is a Model Context Protocol (MCP) server that uses the [`llms-full-unbind`](https://github.com/ota-meshi/llms-full-unbind) parser to split `llms-full.txt` files into individual pages and provide per-page information in response to AI requests.
+This is a Model Context Protocol (MCP) server that uses the [`llms-full-unbind`](https://github.com/ota-meshi/llms-full-unbind/blob/main/packages/llms-full-unbind/README.md) parser to split `llms-full.txt` files into individual pages and provide per-page information in response to AI requests.
 It downloads one or more `llms-full.txt` files, indexes the pages, and serves them over the MCP standard transports.
 
 ## Quick Start
