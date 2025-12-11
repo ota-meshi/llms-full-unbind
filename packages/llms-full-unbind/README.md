@@ -11,6 +11,12 @@ This library is primarily intended for use in the [llms-full-unbind-mcp](../llms
 
 ## Usage
 
+### Installation
+
+```bash
+npm install llms-full-unbind
+```
+
 ### Basic Usage
 
 Fetch the text content and unbind it in one go.
@@ -134,12 +140,6 @@ Content of the page...
 # Another Page
 
 More content...
-```
-
-## Installation
-
-```bash
-npm install llms-full-unbind
 ```
 
 ## API
