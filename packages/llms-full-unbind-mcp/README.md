@@ -24,7 +24,7 @@ The server speaks MCP over stdio, so it is ready to be wired into Claude or othe
 
 Positional arguments only:
 
-- `llmsFullTxtURLs` (required, multiple): one or more URLs pointing to `llms-full.txt` files to index.
+- `url` (required, multiple): one or more URLs pointing to `llms-full.txt` files to index.
 
 Environment:
 
