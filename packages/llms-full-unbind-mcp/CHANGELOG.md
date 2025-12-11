@@ -1,5 +1,14 @@
 # llms-full-unbind-mcp
 
+## 0.1.1
+
+### Patch Changes
+
+- [#3](https://github.com/ota-meshi/llms-full-unbind/pull/3) [`3a5e6f0`](https://github.com/ota-meshi/llms-full-unbind/commit/3a5e6f02f29f163089120a9bc5f177ffd95e0432) Thanks [@ota-meshi](https://github.com/ota-meshi)! - chore: use trusted publishing
+
+- Updated dependencies [[`3a5e6f0`](https://github.com/ota-meshi/llms-full-unbind/commit/3a5e6f02f29f163089120a9bc5f177ffd95e0432)]:
+  - llms-full-unbind@0.1.1
+
 ## 0.1.0
 
 ### Minor Changes
