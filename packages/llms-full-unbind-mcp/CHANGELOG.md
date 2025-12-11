@@ -1,5 +1,11 @@
 # llms-full-unbind-mcp
 
+## 0.1.3
+
+### Patch Changes
+
+- [#7](https://github.com/ota-meshi/llms-full-unbind/pull/7) [`9008a7c`](https://github.com/ota-meshi/llms-full-unbind/commit/9008a7ca971e50a059b422aabc1e9ad437ad4586) Thanks [@ota-meshi](https://github.com/ota-meshi)! - feat(llms-full-unbind-mcp): use gunshi v0.27-beta
+
 ## 0.1.2
 
 ### Patch Changes
