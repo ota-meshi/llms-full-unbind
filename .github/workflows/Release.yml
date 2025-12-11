@@ -18,6 +18,7 @@ jobs:
     if: github.repository == 'ota-meshi/llms-full-unbind'
     permissions:
       contents: write # to create release (changesets/action)
+      issues: write
       id-token: write # OpenID Connect token needed for provenance
       pull-requests: write # to create pull request (changesets/action)
     name: Release
