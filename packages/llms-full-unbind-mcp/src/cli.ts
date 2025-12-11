@@ -20,18 +20,18 @@ export async function runCli(): Promise<void> {
     gunshi.define({
       name: pkg.name,
       description: pkg.description,
-      toKebab: true, // Apply to all arguments
+      toKebab: true, // Apply to all arguments,
       args: {
-        "llms-full-txt-url": {
+        url: {
           type: "positional",
           description: "URLs to llms-full.txt files",
           multiple: true,
-          // required: true,
+          required: true,
         },
       },
       run: async (options) => {
         const server = new LLMsFullUnbindMcpServer({
-          llmsFullTxtURLs: options.positionals,
+          llmsFullTxtURLs: options.values.url,
         });
 
         const transport = new StdioServerTransport();
