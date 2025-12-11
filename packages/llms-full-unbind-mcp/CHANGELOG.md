@@ -1,5 +1,11 @@
 # llms-full-unbind-mcp
 
+## 0.1.2
+
+### Patch Changes
+
+- [#5](https://github.com/ota-meshi/llms-full-unbind/pull/5) [`59f6eac`](https://github.com/ota-meshi/llms-full-unbind/commit/59f6eac5c8a203f2ae3460220d326a8b686136fb) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix(llms-full-unbind-mcp): not working on CLI
+
 ## 0.1.1
 
 ### Patch Changes
