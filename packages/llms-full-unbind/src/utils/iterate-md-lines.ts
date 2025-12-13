@@ -45,6 +45,7 @@ export function* iterateMarkdownLinesWithoutCodeBlocks(
       }
       continue;
     }
+    if (inCodeBlock) continue;
 
     yield { line, index };
   }
