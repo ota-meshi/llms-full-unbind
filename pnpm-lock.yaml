@@ -92,8 +92,8 @@ importers:
         specifier: ^1.0.0
         version: 1.24.3(zod@4.1.13)
       gunshi:
-        specifier: ^0.27.0-beta.6
-        version: 0.27.0-beta.6
+        specifier: ^0.27.0
+        version: 0.27.0
       llms-full-unbind:
         specifier: workspace:*
         version: link:../llms-full-unbind
@@ -1277,8 +1277,8 @@ packages:
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
-  gunshi@0.27.0-beta.6:
-    resolution: {integrity: sha512-tNMOgKmrpLUjsCD0iwEFX0jAnYKjRPeoRniVFqKe6eoa+v7Tcx/G+cMCVhIa7mK+FSIaJy4P5yMyyK6OsNLJGw==}
+  gunshi@0.27.0:
+    resolution: {integrity: sha512-x4htNMezP3PnOW39ZsQlnijZAw5IONYO3whczfI+7H6LKE5Zgepdo1T+gN28g9wGfDlSuv6A9pAHI4otKNq3lA==}
     engines: {node: '>= 20'}
 
   has-flag@4.0.0:
@@ -3671,7 +3671,7 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  gunshi@0.27.0-beta.6:
+  gunshi@0.27.0:
     dependencies:
       args-tokens: 0.23.0
 

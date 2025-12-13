@@ -30,7 +30,7 @@ CLI Usage:
 > llms-full-unbind-mcp v0.1.4
 
 - USAGE:
-  - llms-full-unbind-mcp `<OPTIONS>` `<url>`
+  - llms-full-unbind-mcp `<OPTIONS>` `<url>` [`<url>` ...]
 
 - ARGUMENTS:
   - url ... URLs to `llms-full.txt` files
