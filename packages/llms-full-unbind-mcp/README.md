@@ -27,7 +27,7 @@ CLI Usage:
 
 <!-- CLI-USAGE-START -->
 
-> llms-full-unbind-mcp v0.1.3
+> llms-full-unbind-mcp v0.1.4
 
 - USAGE:
   - llms-full-unbind-mcp `<OPTIONS>` `<url>`

@@ -1,5 +1,11 @@
 # llms-full-unbind
 
+## 0.1.2
+
+### Patch Changes
+
+- [#10](https://github.com/ota-meshi/llms-full-unbind/pull/10) [`1fe42e2`](https://github.com/ota-meshi/llms-full-unbind/commit/1fe42e201d0854058c74a8397035447536100d39) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: prevent yielding lines when inside a code block
+
 ## 0.1.1
 
 ### Patch Changes
