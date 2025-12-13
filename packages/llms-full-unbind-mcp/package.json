@@ -1,6 +1,6 @@
 {
   "name": "llms-full-unbind-mcp",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Model Context Protocol server for llms-full-unbind",
   "type": "module",
   "main": "./lib/index.js",
