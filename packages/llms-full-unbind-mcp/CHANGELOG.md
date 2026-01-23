@@ -1,5 +1,11 @@
 # llms-full-unbind-mcp
 
+## 0.1.5
+
+### Patch Changes
+
+- [#12](https://github.com/ota-meshi/llms-full-unbind/pull/12) [`548b8a2`](https://github.com/ota-meshi/llms-full-unbind/commit/548b8a2c5f00d405d2fc12d8d5906a3fb7c5b22f) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix(llms-full-unbind-mcp): `-v` flag not working
+
 ## 0.1.4
 
 ### Patch Changes
