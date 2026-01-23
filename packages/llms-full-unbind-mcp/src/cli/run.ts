@@ -34,12 +34,13 @@ export const command: gunshi.Command = defined;
  */
 export async function runCli(): Promise<void> {
   await gunshi.cli(process.argv.slice(2), defined, {
+    name: pkg.name,
+    version: pkg.version,
     //
     // The MCP server will cause an error if it outputs anything other than MCP information to standard output,
     // so it will be disabled.
     //
-    // name: pkg.name,
-    // version: pkg.version
+    renderHeader: () => Promise.resolve(""),
   });
 }
 
