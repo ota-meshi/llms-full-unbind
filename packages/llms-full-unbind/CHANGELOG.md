@@ -1,5 +1,11 @@
 # llms-full-unbind
 
+## 0.1.3
+
+### Patch Changes
+
+- [#14](https://github.com/ota-meshi/llms-full-unbind/pull/14) [`ee580d3`](https://github.com/ota-meshi/llms-full-unbind/commit/ee580d3bba50eb75ac40de6de8fc040a2ae56d6e) Thanks [@ota-meshi](https://github.com/ota-meshi)! - fix: enhance URL parsing for folded YAML values in frontmatter
+
 ## 0.1.2
 
 ### Patch Changes
