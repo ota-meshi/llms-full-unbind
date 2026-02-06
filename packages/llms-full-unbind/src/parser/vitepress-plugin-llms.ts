@@ -25,7 +25,7 @@ type FrontmatterBlock = {
   url: string;
 };
 
-const RE_URL_PREFIX_LINE = /^\s*url:\s*/v;
+const RE_URL_PREFIX_LINE = /^(\s*)url:(?:\s*([>\|])-)?\s*/v;
 
 /**
  * Streaming parser for vitepress-plugin-llms format
@@ -122,13 +122,54 @@ function detectFrontmatterBlock(
   const line = lines[index].trimEnd();
   if (line !== "---") return null;
   const nextLine = lines[index + 1] ?? "";
-  const nextNextLine = lines[index + 2] ?? "";
   const matchUrl = RE_URL_PREFIX_LINE.exec(nextLine);
   if (!matchUrl) return null;
-  const url = nextLine.slice(matchUrl[0].length).trim();
-  if (nextNextLine !== "---") return null;
+  if (matchUrl[2] == null && nextLine.slice(matchUrl[0].length).trim() !== "") {
+    // Simple scalar style
+    const url = nextLine.slice(matchUrl[0].length).trim();
+    const nextNextLine = lines[index + 2] ?? "";
+    if (nextNextLine !== "---") return null;
+    return { endLine: index + 2, url };
+  }
+  if (matchUrl[2] === ">") {
+    // Folded style
+    return parseMultilineUrl(lines, index + 2, matchUrl[1], matchUrl[2]);
+  }
+  if (matchUrl[2] === "|") {
+    // Block literal style
+    return parseMultilineUrl(lines, index + 2, matchUrl[1], matchUrl[2]);
+  }
+  return null;
+}
 
-  return { endLine: index + 2, url };
+/**
+ * Parse multiline URL value in folded or block literal style
+ */
+function parseMultilineUrl(
+  lines: string[],
+  valueStartLineIndex: number,
+  indent: string,
+  kind: ">" | "|",
+): Omit<FrontmatterBlock, "startLine"> | null {
+  const reIndent = new RegExp(String.raw`^[^\S\n]{${indent.length + 1},}`, "v");
+  const urlLines: string[] = [];
+  for (let i = valueStartLineIndex; i < lines.length; i++) {
+    const line = lines[i];
+    if (reIndent.test(line) || line.trim() === "") {
+      urlLines.push(line.trim());
+      continue;
+    }
+    // End of URL value
+    if (line.trimEnd() !== "---") {
+      // Invalid frontmatter block
+      break;
+    }
+    const url = (
+      kind === ">" ? urlLines.join(" ") : urlLines.join("\n")
+    ).trim();
+    return { endLine: i, url };
+  }
+  return null; // No ending --- found
 }
 
 /**

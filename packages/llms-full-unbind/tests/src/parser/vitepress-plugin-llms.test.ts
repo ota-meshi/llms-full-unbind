@@ -182,6 +182,50 @@ More content.`;
     assert.strictEqual(pages[1].title, null);
     assert.strictEqual(pages[2].title, "Third Section");
   });
+  it("should parse folded URL YAML value across multiple sections", () => {
+    const content = `---
+url: >-
+  /path/to/first
+---
+
+# First Title
+
+First page content.
+
+---
+url: >-
+  /path/to/second
+---
+
+# Second Title
+
+Second page content.
+
+---
+url: >-
+  /path/to/third
+---
+
+# Third Title
+
+Third page content.`;
+
+    const pages = Array.from(unbind(content));
+
+    assert.strictEqual(pages.length, 3);
+    assert.strictEqual(pages[0].title, "First Title");
+    assert.deepStrictEqual(pages[0].metadata, {
+      url: "/path/to/first",
+    });
+    assert.strictEqual(pages[1].title, "Second Title");
+    assert.deepStrictEqual(pages[1].metadata, {
+      url: "/path/to/second",
+    });
+    assert.strictEqual(pages[2].title, "Third Title");
+    assert.deepStrictEqual(pages[2].metadata, {
+      url: "/path/to/third",
+    });
+  });
 });
 
 describe("unbindStream (vitepress-plugin-llms format)", () => {
