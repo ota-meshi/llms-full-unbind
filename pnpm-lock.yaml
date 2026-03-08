@@ -51,8 +51,8 @@ importers:
         specifier: ^0.7.0
         version: 0.7.0(@eslint/markdown@7.5.1)(eslint@9.39.1)
       eslint-plugin-markdown-preferences:
-        specifier: ^0.38.0
-        version: 0.38.0(@eslint/markdown@7.5.1)(eslint@9.39.1)
+        specifier: ^0.40.0
+        version: 0.40.3(@eslint/markdown@7.5.1)(eslint@9.39.1)
       eslint-plugin-n:
         specifier: ^17.16.2
         version: 17.23.1(eslint@9.39.1)(typescript@5.9.3)
@@ -426,24 +426,28 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
 
   '@rolldown/binding-linux-arm64-musl@1.0.0-beta.53':
     resolution: {integrity: sha512-bGe5EBB8FVjHBR1mOLOPEFg1Lp3//7geqWkU5NIhxe+yH0W8FVrQ6WRYOap4SUTKdklD/dC4qPLREkMMQ855FA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
 
   '@rolldown/binding-linux-x64-gnu@1.0.0-beta.53':
     resolution: {integrity: sha512-qL+63WKVQs1CMvFedlPt0U9PiEKJOAL/bsHMKUDS6Vp2Q+YAv/QLPu8rcvkfIMvQ0FPU2WL0aX4eWwF6e/GAnA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
 
   '@rolldown/binding-linux-x64-musl@1.0.0-beta.53':
     resolution: {integrity: sha512-VGl9JIGjoJh3H8Mb+7xnVqODajBmrdOOb9lxWXdcmxyI+zjB2sux69br0hZJDTyLJfvBoYm439zPACYbCjGRmw==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [linux]
+    libc: [musl]
 
   '@rolldown/binding-openharmony-arm64@1.0.0-beta.53':
     resolution: {integrity: sha512-B4iIserJXuSnNzA5xBLFUIjTfhNy7d9sq4FUMQY3GhQWGVhS2RWWzzDnkSU6MUt7/aHUrep0CdQfXUJI9D3W7A==}
@@ -989,8 +993,8 @@ packages:
       '@eslint/markdown': ^7.1.0
       eslint: '>=9.0.0'
 
-  eslint-plugin-markdown-preferences@0.38.0:
-    resolution: {integrity: sha512-7DQ60sgg/y7xXghkrNIrTHIiwNcMKWiAXTygwWgtgIb8tHL0zrDCDNEJwUOEgIilOCNRUYQUEj7dKYWjw4rjrQ==}
+  eslint-plugin-markdown-preferences@0.40.3:
+    resolution: {integrity: sha512-R3CCAEFwnnYXukTdtvdsamGjbTgVs9UZKqMKhNeWNXzFtOP1Frc89bgbd56lJUN7ASaxgvzc5fUpKvDCOTtDpg==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
       '@eslint/markdown': ^7.4.0
@@ -1247,6 +1251,7 @@ packages:
 
   glob@10.5.0:
     resolution: {integrity: sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   globals@14.0.0:
@@ -3298,7 +3303,7 @@ snapshots:
       synckit: 0.11.11
       undici: 7.16.0
 
-  eslint-plugin-markdown-preferences@0.38.0(@eslint/markdown@7.5.1)(eslint@9.39.1):
+  eslint-plugin-markdown-preferences@0.40.3(@eslint/markdown@7.5.1)(eslint@9.39.1):
     dependencies:
       '@eslint/markdown': 7.5.1
       diff-sequences: 29.6.3
