@@ -15,8 +15,8 @@ importers:
         specifier: ^2.28.1
         version: 2.29.8(@types/node@24.10.1)
       '@eslint/markdown':
-        specifier: ^7.4.0
-        version: 7.5.1
+        specifier: ^8.0.0
+        version: 8.0.0
       '@ota-meshi/eslint-plugin':
         specifier: ^0.18.0
         version: 0.18.0(@eslint-community/eslint-plugin-eslint-comments@4.5.0(eslint@9.39.1))(eslint-plugin-regexp@3.1.0(eslint@9.39.1))(eslint@9.39.1)
@@ -49,10 +49,10 @@ importers:
         version: 3.1.1(eslint@9.39.1)
       eslint-plugin-markdown-links:
         specifier: ^0.7.0
-        version: 0.7.0(@eslint/markdown@7.5.1)(eslint@9.39.1)
+        version: 0.7.0(@eslint/markdown@8.0.0)(eslint@9.39.1)
       eslint-plugin-markdown-preferences:
         specifier: ^0.40.0
-        version: 0.40.3(@eslint/markdown@7.5.1)(eslint@9.39.1)
+        version: 0.40.3(@eslint/markdown@8.0.0)(eslint@9.39.1)
       eslint-plugin-n:
         specifier: ^17.16.2
         version: 17.23.1(eslint@9.39.1)(typescript@5.9.3)
@@ -256,9 +256,9 @@ packages:
     resolution: {integrity: sha512-S26Stp4zCy88tH94QbBv3XCuzRQiZ9yXofEILmglYTh/Ug/a9/umqvgFtYBAo3Lp0nsI/5/qH1CCrbdK3AP1Tw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/markdown@7.5.1':
-    resolution: {integrity: sha512-R8uZemG9dKTbru/DQRPblbJyXpObwKzo8rv1KYGGuPUPtjM4LXBYM9q5CIZAComzZupws3tWbDwam5AFpPLyJQ==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+  '@eslint/markdown@8.0.0':
+    resolution: {integrity: sha512-Rh3+76uHdnkk/ocLMZfWHXoPA/MK+GOqqjCAioiyNk2eYBC8UniRHdTMbM+2XZqTLWAcQo/SuU1CsXtdIOTX1g==}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
   '@eslint/object-schema@2.1.7':
     resolution: {integrity: sha512-VtAOaymWVfZcmZbp6E2mympDIHvyjXs/12LqWYjVw6qjrfF+VK+fyG33kChz3nnK+SU5/NeHOqrTEHS8sXO3OA==}
@@ -2630,16 +2630,18 @@ snapshots:
 
   '@eslint/js@9.39.1': {}
 
-  '@eslint/markdown@7.5.1':
+  '@eslint/markdown@8.0.0':
     dependencies:
-      '@eslint/core': 0.17.0
-      '@eslint/plugin-kit': 0.4.1
+      '@eslint/core': 1.1.1
+      '@eslint/plugin-kit': 0.6.1
       github-slugger: 2.0.0
       mdast-util-from-markdown: 2.0.2
       mdast-util-frontmatter: 2.0.1
       mdast-util-gfm: 3.1.0
+      mdast-util-math: 3.0.0
       micromark-extension-frontmatter: 2.0.0
       micromark-extension-gfm: 3.0.0
+      micromark-extension-math: 3.1.0
       micromark-util-normalize-identifier: 2.0.1
     transitivePeerDependencies:
       - supports-color
@@ -3345,9 +3347,9 @@ snapshots:
     transitivePeerDependencies:
       - '@eslint/json'
 
-  eslint-plugin-markdown-links@0.7.0(@eslint/markdown@7.5.1)(eslint@9.39.1):
+  eslint-plugin-markdown-links@0.7.0(@eslint/markdown@8.0.0)(eslint@9.39.1):
     dependencies:
-      '@eslint/markdown': 7.5.1
+      '@eslint/markdown': 8.0.0
       '@mdit-vue/shared': 3.0.2
       entities: 7.0.0
       eslint: 9.39.1
@@ -3357,9 +3359,9 @@ snapshots:
       synckit: 0.11.11
       undici: 7.16.0
 
-  eslint-plugin-markdown-preferences@0.40.3(@eslint/markdown@7.5.1)(eslint@9.39.1):
+  eslint-plugin-markdown-preferences@0.40.3(@eslint/markdown@8.0.0)(eslint@9.39.1):
     dependencies:
-      '@eslint/markdown': 7.5.1
+      '@eslint/markdown': 8.0.0
       diff-sequences: 29.6.3
       emoji-regex-xs: 2.0.1
       eslint: 9.39.1
