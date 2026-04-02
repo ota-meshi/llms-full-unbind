@@ -51,8 +51,8 @@ importers:
         specifier: ^0.8.0
         version: 0.8.0(@eslint/markdown@8.0.0)(eslint@9.39.1)
       eslint-plugin-markdown-preferences:
-        specifier: ^0.40.0
-        version: 0.40.3(@eslint/markdown@8.0.0)(eslint@9.39.1)
+        specifier: ^0.41.0
+        version: 0.41.0(@eslint/markdown@8.0.0)(eslint@9.39.1)
       eslint-plugin-n:
         specifier: ^17.16.2
         version: 17.23.1(eslint@9.39.1)(typescript@5.9.3)
@@ -1017,11 +1017,11 @@ packages:
       '@eslint/markdown': ^7.1.0 || ^8.0.0
       eslint: '>=9.0.0'
 
-  eslint-plugin-markdown-preferences@0.40.3:
-    resolution: {integrity: sha512-R3CCAEFwnnYXukTdtvdsamGjbTgVs9UZKqMKhNeWNXzFtOP1Frc89bgbd56lJUN7ASaxgvzc5fUpKvDCOTtDpg==}
+  eslint-plugin-markdown-preferences@0.41.0:
+    resolution: {integrity: sha512-Pu150jKH1Cf5sW/Igck0VbuT0A9qFpIPG1dDvyAt2lG8tA3VzPDkwxBusO8JqQ9NRIrm3pat0X6cfanSki3WZQ==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
-      '@eslint/markdown': ^7.4.0
+      '@eslint/markdown': ^7.4.0 || ^8.0.0
       eslint: '>=9.0.0'
 
   eslint-plugin-n@17.23.1:
@@ -3359,7 +3359,7 @@ snapshots:
       synckit: 0.11.12
       undici: 7.22.0
 
-  eslint-plugin-markdown-preferences@0.40.3(@eslint/markdown@8.0.0)(eslint@9.39.1):
+  eslint-plugin-markdown-preferences@0.41.0(@eslint/markdown@8.0.0)(eslint@9.39.1):
     dependencies:
       '@eslint/markdown': 8.0.0
       diff-sequences: 29.6.3
