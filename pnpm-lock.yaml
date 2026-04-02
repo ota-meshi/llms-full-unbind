@@ -48,8 +48,8 @@ importers:
         specifier: ^3.0.0
         version: 3.1.1(eslint@9.39.1)
       eslint-plugin-markdown-links:
-        specifier: ^0.7.0
-        version: 0.7.0(@eslint/markdown@8.0.0)(eslint@9.39.1)
+        specifier: ^0.8.0
+        version: 0.8.0(@eslint/markdown@8.0.0)(eslint@9.39.1)
       eslint-plugin-markdown-preferences:
         specifier: ^0.40.0
         version: 0.40.3(@eslint/markdown@8.0.0)(eslint@9.39.1)
@@ -1010,11 +1010,11 @@ packages:
     peerDependencies:
       eslint: '>=9.38.0'
 
-  eslint-plugin-markdown-links@0.7.0:
-    resolution: {integrity: sha512-JTgJgE22NU4Rs15mdDz4U52mJxYQqT7jwDiqEwejH8i4Qh7P4ihDggs3dFBzVP7sbzCxzTkZr0eFOyLgNsWAug==}
+  eslint-plugin-markdown-links@0.8.0:
+    resolution: {integrity: sha512-25aemNz7PxLeTDQGhcsCrBxPwe/gRnOS5XwfQhd/OV1vGtu0YeOrAztMYUQOKD+NMGS9gYTjKvAYCpetOu2y8A==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
     peerDependencies:
-      '@eslint/markdown': ^7.1.0
+      '@eslint/markdown': ^7.1.0 || ^8.0.0
       eslint: '>=9.0.0'
 
   eslint-plugin-markdown-preferences@0.40.3:
@@ -3347,7 +3347,7 @@ snapshots:
     transitivePeerDependencies:
       - '@eslint/json'
 
-  eslint-plugin-markdown-links@0.7.0(@eslint/markdown@8.0.0)(eslint@9.39.1):
+  eslint-plugin-markdown-links@0.8.0(@eslint/markdown@8.0.0)(eslint@9.39.1):
     dependencies:
       '@eslint/markdown': 8.0.0
       '@mdit-vue/shared': 3.0.2
@@ -3356,8 +3356,8 @@ snapshots:
       fast-content-type-parse: 3.0.0
       github-slugger: 2.0.0
       sdbm: 3.0.0
-      synckit: 0.11.11
-      undici: 7.16.0
+      synckit: 0.11.12
+      undici: 7.22.0
 
   eslint-plugin-markdown-preferences@0.40.3(@eslint/markdown@8.0.0)(eslint@9.39.1):
     dependencies:
