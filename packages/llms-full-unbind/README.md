@@ -130,7 +130,7 @@ More content...
 ### H1 Header Based Format
 
 Pages are separated by H1 headers (`# Title`).
-Used by projects like [svelte.dev](https://svelte.dev/llms-full.txt), [nuxt.com](https://nuxt.com/llms-full.txt), and [docs.astro.build](https://docs.astro.build/llms-full.txt).
+Used by projects like [svelte.dev](https://svelte.dev/llms-full.txt) and [nuxt.com](https://nuxt.com/llms-full.txt).
 
 ```markdown
 # Page Title
