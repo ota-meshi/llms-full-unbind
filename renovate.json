@@ -6,7 +6,7 @@
     ":disableDependencyDashboard"
   ],
   "constraints": {
-    "pnpm": "10"
+    "pnpm": "11"
   },
   "packageRules": [
     {
