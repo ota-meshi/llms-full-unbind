@@ -5,6 +5,9 @@
     ":preserveSemverRanges",
     ":disableDependencyDashboard"
   ],
+  "constraints": {
+    "pnpm": "10"
+  },
   "packageRules": [
     {
       "updateTypes": ["minor", "patch", "pin", "digest"],

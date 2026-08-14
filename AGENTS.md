@@ -262,6 +262,7 @@ The codebase is organized by format type with shared parsing utilities:
 - Run tests before building to verify functionality
 - Add corresponding tests when adding new features
 - Ensure no ESLint errors before committing
+- Keep Renovate's pnpm major constraint in sync with the pnpm version used by GitHub Actions
 - Parser detection logic prioritizes "certain" matches over "potential" matches
 - HTML tokenizer supports tag attributes, comments, CDATA, and DOCTYPE declarations
 - All parsers implement the `StreamingParser` interface for consistent streaming behavior
