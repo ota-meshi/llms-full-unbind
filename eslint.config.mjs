@@ -96,6 +96,19 @@ export default defineConfig([
     },
   },
   {
+    files: ["packages/llms-full-unbind-mcp/src/cli.ts"],
+    rules: {
+      "n/hashbang": [
+        "error",
+        {
+          convertPath: {
+            "src/cli.ts": ["^src/cli[.]ts$", "lib/cli.js"],
+          },
+        },
+      ],
+    },
+  },
+  {
     files: ["**/*.md", "*.md"].flatMap((pattern) => [
       `${pattern}/*.js`,
       `${pattern}/*.mjs`,
