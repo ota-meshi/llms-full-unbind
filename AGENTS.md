@@ -263,7 +263,7 @@ The codebase is organized by format type with shared parsing utilities:
 - Add corresponding tests when adding new features
 - Ensure no ESLint errors before committing
 - Keep Renovate's pnpm major constraint in sync with the pnpm version used by GitHub Actions
-- Keep Renovate and pnpm minimum release age policies aligned: Renovate delays npm branches, while pnpm strictly validates direct and transitive dependency resolution
+- Keep Renovate and pnpm minimum release age policies aligned: committed lockfile entries are trusted, while newly resolved direct and transitive dependencies must satisfy the policy
 - Parser detection logic prioritizes "certain" matches over "potential" matches
 - HTML tokenizer supports tag attributes, comments, CDATA, and DOCTYPE declarations
 - All parsers implement the `StreamingParser` interface for consistent streaming behavior

@@ -3,3 +3,4 @@ packages:
 
 minimumReleaseAge: 1440
 minimumReleaseAgeStrict: true
+trustLockfile: true
