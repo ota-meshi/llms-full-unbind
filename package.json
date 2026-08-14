@@ -22,7 +22,7 @@
     "eslint-plugin-json-schema-validator": "^6.0.0",
     "eslint-plugin-jsonc": "^3.0.0",
     "eslint-plugin-markdown-links": "^0.9.0",
-    "eslint-plugin-markdown-preferences": "^0.41.0",
+    "eslint-plugin-markdown-preferences": "^0.42.0",
     "eslint-plugin-n": "^17.16.2",
     "eslint-plugin-node-dependencies": "^2.0.0",
     "eslint-plugin-prettier": "^5.2.3",
@@ -30,7 +30,7 @@
     "eslint-plugin-vue": "^10.8.0",
     "eslint-plugin-yml": "^3.0.0",
     "prettier": "^3.5.3",
-    "tsdown": "^0.21.0",
+    "tsdown": "^0.22.0",
     "typescript": "~5.9.0",
     "typescript-eslint": "^8.56.0"
   },
