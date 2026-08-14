@@ -7,7 +7,6 @@
  * For examples:
  * - https://svelte.dev/llms-full.txt
  * - https://nuxt.com/llms-full.txt
- * - https://docs.astro.build/llms-full.txt
  */
 import {
   extractH1Title,
