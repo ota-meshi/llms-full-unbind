@@ -18,8 +18,8 @@ importers:
         specifier: ^4.7.0
         version: 4.7.2(eslint@10.8.1(supports-color@7.2.0))
       '@eslint/markdown':
-        specifier: ^8.0.0
-        version: 8.0.0(supports-color@7.2.0)
+        specifier: ^9.0.0
+        version: 9.0.0(supports-color@7.2.0)
       '@ota-meshi/eslint-plugin':
         specifier: ^0.21.0
         version: 0.21.0(@eslint-community/eslint-plugin-eslint-comments@4.7.2(eslint@10.8.1(supports-color@7.2.0)))(eslint-plugin-regexp@3.1.0(eslint@10.8.1(supports-color@7.2.0)))(eslint@10.8.1(supports-color@7.2.0))
@@ -49,10 +49,10 @@ importers:
         version: 3.1.1(eslint@10.8.1(supports-color@7.2.0))
       eslint-plugin-markdown-links:
         specifier: ^0.9.0
-        version: 0.9.0(@eslint/markdown@8.0.0(supports-color@7.2.0))(eslint@10.8.1(supports-color@7.2.0))
+        version: 0.9.0(@eslint/markdown@9.0.0(supports-color@7.2.0))(eslint@10.8.1(supports-color@7.2.0))
       eslint-plugin-markdown-preferences:
         specifier: ^0.43.0
-        version: 0.43.0(@eslint/markdown@8.0.0(supports-color@7.2.0))(eslint@10.8.1(supports-color@7.2.0))(supports-color@7.2.0)
+        version: 0.43.0(@eslint/markdown@9.0.0(supports-color@7.2.0))(eslint@10.8.1(supports-color@7.2.0))(supports-color@7.2.0)
       eslint-plugin-n:
         specifier: ^18.0.0
         version: 18.3.0(eslint@10.8.1(supports-color@7.2.0))(ts-declaration-location@1.0.7(typescript@5.9.3))(typescript@5.9.3)
@@ -249,8 +249,8 @@ packages:
     resolution: {integrity: sha512-S26Stp4zCy88tH94QbBv3XCuzRQiZ9yXofEILmglYTh/Ug/a9/umqvgFtYBAo3Lp0nsI/5/qH1CCrbdK3AP1Tw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@eslint/markdown@8.0.0':
-    resolution: {integrity: sha512-Rh3+76uHdnkk/ocLMZfWHXoPA/MK+GOqqjCAioiyNk2eYBC8UniRHdTMbM+2XZqTLWAcQo/SuU1CsXtdIOTX1g==}
+  '@eslint/markdown@9.0.0':
+    resolution: {integrity: sha512-287jt3NwhChN7TLsWq44IB5vUAKwwNXafzLlR1CMcQK5/4mAwbwwAzqr/S7gCYRRJOSHCgGXzIV9uPCh1P810A==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
   '@eslint/object-schema@3.0.5':
@@ -263,6 +263,10 @@ packages:
 
   '@eslint/plugin-kit@0.7.2':
     resolution: {integrity: sha512-+CNAzxglkrpNf/kKywqQfk74QjtceuOE7Qm+AF8miRvPF/wmmK5+OJOgVh3AVTT3RP2mH3+FOaxlE5v72owk0A==}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=24}
+
+  '@eslint/plugin-kit@0.7.3':
+    resolution: {integrity: sha512-IkO+/KEUvwbVpiURZg+P7zF74z5Jxe0UgJxVni+RtoHQ6IZieXaO02kmadomap/q+l6bc/jdPGGqTjhuZnuz1Q==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
 
   '@humanfs/core@0.19.1':
@@ -2580,10 +2584,10 @@ snapshots:
 
   '@eslint/js@9.39.1': {}
 
-  '@eslint/markdown@8.0.0(supports-color@7.2.0)':
+  '@eslint/markdown@9.0.0(supports-color@7.2.0)':
     dependencies:
-      '@eslint/core': 1.1.1
-      '@eslint/plugin-kit': 0.6.1
+      '@eslint/core': 1.2.1
+      '@eslint/plugin-kit': 0.7.3
       github-slugger: 2.0.0
       mdast-util-from-markdown: 2.0.2(supports-color@7.2.0)
       mdast-util-frontmatter: 2.0.1(supports-color@7.2.0)
@@ -2604,6 +2608,11 @@ snapshots:
       levn: 0.4.1
 
   '@eslint/plugin-kit@0.7.2':
+    dependencies:
+      '@eslint/core': 1.2.1
+      levn: 0.4.1
+
+  '@eslint/plugin-kit@0.7.3':
     dependencies:
       '@eslint/core': 1.2.1
       levn: 0.4.1
@@ -3371,9 +3380,9 @@ snapshots:
     transitivePeerDependencies:
       - '@eslint/json'
 
-  eslint-plugin-markdown-links@0.9.0(@eslint/markdown@8.0.0(supports-color@7.2.0))(eslint@10.8.1(supports-color@7.2.0)):
+  eslint-plugin-markdown-links@0.9.0(@eslint/markdown@9.0.0(supports-color@7.2.0))(eslint@10.8.1(supports-color@7.2.0)):
     dependencies:
-      '@eslint/markdown': 8.0.0(supports-color@7.2.0)
+      '@eslint/markdown': 9.0.0(supports-color@7.2.0)
       '@mdit-vue/shared': 3.0.2
       entities: 8.0.0
       eslint: 10.8.1(supports-color@7.2.0)
@@ -3383,9 +3392,9 @@ snapshots:
       synckit: 0.11.12
       undici: 7.22.0
 
-  eslint-plugin-markdown-preferences@0.43.0(@eslint/markdown@8.0.0(supports-color@7.2.0))(eslint@10.8.1(supports-color@7.2.0))(supports-color@7.2.0):
+  eslint-plugin-markdown-preferences@0.43.0(@eslint/markdown@9.0.0(supports-color@7.2.0))(eslint@10.8.1(supports-color@7.2.0))(supports-color@7.2.0):
     dependencies:
-      '@eslint/markdown': 8.0.0(supports-color@7.2.0)
+      '@eslint/markdown': 9.0.0(supports-color@7.2.0)
       diff-sequences: 29.6.3
       emoji-regex-xs: 2.0.1
       eslint: 10.8.1(supports-color@7.2.0)
